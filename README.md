@@ -43,3 +43,27 @@ npm run test:ui
 ```bash
 npm run check
 ```
+
+## Deployment na Cloudflare Workers
+
+### Pierwsze wdrożenie
+1. Zaloguj się do Cloudflare:
+```bash
+npx wrangler login
+```
+
+2. Wdróż aplikację:
+```bash
+npm run deploy
+```
+
+### Lokalne testowanie z Cloudflare Workers
+```bash
+npm run cf:dev
+```
+
+### Kolejne wdrożenia
+Po pierwszym wdrożeniu, wystarczy uruchomić:
+```bash
+npm run deploy
+```
