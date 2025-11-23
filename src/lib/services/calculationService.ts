@@ -60,7 +60,7 @@ export class CalculationService {
 			aggregator += 1;
 			console.debug(`At the end of month ${index} of aggregation we will have ${aggregator}x times the monthly payment`);
 		}
-		
+
 		return expectedCapital / aggregator;
 	}
 }
