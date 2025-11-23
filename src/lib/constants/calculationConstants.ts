@@ -6,6 +6,9 @@ export class CalculationConstants {
 
 	// Predicted retirement increases (annual percentage)
 	static readonly RETIREMENT_INCREASE_RATE = 0.0;
-
-	// Add other calculation constants here
 }
+
+export const CalculationDefaults = {
+	annualReturnRateDuringPayout: 0.04,
+	annualReturnRateDuringAggregation: 0.05,
+};
