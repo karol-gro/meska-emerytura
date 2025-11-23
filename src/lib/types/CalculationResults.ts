@@ -1,3 +1,7 @@
 export interface CalculationResults {
-	// Add calculation result properties here
+	expectedNetRetirement: number;
+	numberOfMonthsToRetirement: number; // when you become 60
+
+	requiredCapital: number; // in PLN
+	requiredMonthlySavings: number; // in PLN
 }
