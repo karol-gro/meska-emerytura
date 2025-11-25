@@ -35,12 +35,12 @@
     errorMessage = '';
     results = null;
 
-    if (!birthYear || birthYear < 1900) {
-      errorMessage = 'Podaj prawidłowy rok urodzenia.';
+    if (!birthYear || (new Date().getFullYear() - birthYear) > 59) {
+      errorMessage = 'Musisz mieć co najwyżej 59 lat, żeby móc się załapać.';
       return;
     }
     if (!expectedNetRetirementIncome || expectedNetRetirementIncome <= 0) {
-      errorMessage = 'Oczekiwana emerytura netto musi być większa od zera.';
+      errorMessage = 'Wpisz dodatnią kwotę.';
       return;
     }
 
@@ -52,10 +52,6 @@
 
     try {
       results = service.doSimpleCalculation(params);
-      if (results.numberOfMonthsToRetirement < 0) {
-        errorMessage = 'Data osiągnięcia wieku 60 lat już minęła. Obliczenia niedostępne.';
-        results = null;
-      }
     } catch (e) {
       errorMessage = 'Wystąpił błąd podczas obliczeń.';
       console.error(e);
@@ -90,10 +86,9 @@
   <div class="mt-8 bg-white shadow rounded-lg p-6">
     <h2 class="text-2xl font-semibold mb-4">Wyniki</h2>
     <ul class="space-y-2">
-      <li><span class="font-medium">Oczekiwana emerytura netto:</span> {formatPln(results.expectedNetRetirement)}</li>
-      <li><span class="font-medium">Miesięcy do emerytury:</span> {results.numberOfMonthsToRetirement}</li>
-      <li><span class="font-medium">Wymagany kapitał początkowy na start wypłat:</span> {formatPln(results.requiredCapital)}</li>
-      <li><span class="font-medium">Wymagana miesięczna składka oszczędnościowa:</span> {formatPln(results.requiredMonthlySavings)}</li>
+      <li>Oczekujesz emerytury netto: <span class="font-medium">{formatPln(results.expectedNetRetirement)}</span>.</li>
+      <li>Żeby przejść na emeryturę w wieku emerytalnym kobiet (60 lat) musisz zebrać na IKE aż <span class="font-medium">{formatPln(results.requiredCapital)}</span>.</li>
+      <li>Aby to osiągnąć, odkładaj <span class="font-medium">{formatPln(results.requiredMonthlySavings)} miesięcznie</span> na IKE - tyle kosztuje Cię <em>męska emerytura</em>.</li>
     </ul>
   </div>
 {/if}
