@@ -1,0 +1,14 @@
+{
+	"features": {
+		"ghcr.io/devcontainers-extra/features/cloudflare-wrangler:1": {
+			"version": "1.0.3",
+			"resolved": "ghcr.io/devcontainers-extra/features/cloudflare-wrangler@sha256:36f8ceba43b2503022e6eff4ad80ef4848d54c369d9bc966bf7063517b9a7eb5",
+			"integrity": "sha256:36f8ceba43b2503022e6eff4ad80ef4848d54c369d9bc966bf7063517b9a7eb5"
+		},
+		"ghcr.io/devcontainers-extra/features/pnpm:2": {
+			"version": "2.0.5",
+			"resolved": "ghcr.io/devcontainers-extra/features/pnpm@sha256:694c2b6182435c9e9c06f6071728b087c1181b38c18cecf0defe2ab8c11cddd6",
+			"integrity": "sha256:694c2b6182435c9e9c06f6071728b087c1181b38c18cecf0defe2ab8c11cddd6"
+		}
+	}
+}
