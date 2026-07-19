@@ -1,0 +1,17 @@
+{
+	"permissions": {
+		"allow": [
+			"Bash(pnpm dlx *)",
+			"Bash(pnpm add *)",
+			"Bash(pnpm remove *)",
+			"Bash(pnpm test *)",
+			"Bash(pnpm check *)",
+			"Bash(pnpm build *)",
+			"Bash(pnpm preview *)",
+			"Bash(pnpm format *)",
+			"Bash(pnpm lint *)",
+			"Skill(run)",
+			"Skill(run:*)"
+		]
+	}
+}
