@@ -1,69 +1,58 @@
-# Męska Emerytura
+# Męska emerytura
 
-Aplikacja frontend zbudowana z użyciem:
-- **Svelte** - reaktywny framework UI
-- **TypeScript** - typowanie statyczne
-- **Tailwind CSS** - stylowanie utility-first
-- **Vitest** - testy jednostkowe
-- **Vite** - szybki bundler i dev server
+Kalkulator pokazujący koszt nierównego wieku emerytalnego w Polsce (kobiety 60 lat, mężczyźni 65). Liczy, **ile mężczyzna musi mieć na IKE w dniu 60. urodzin** i **ile musi w tym celu odkładać co miesiąc**, żeby sfinansować 5-letnią lukę, zanim ZUS zacznie płacić. Kobieta w identycznej sytuacji: 0 zł.
 
-## Uruchomienie projektu
+Pełna specyfikacja algorytmu (wzory, decyzje projektowe, walidacje, przykład liczbowy): [ALGORYTM-IKE.md](ALGORYTM-IKE.md).
 
-### Instalacja zależności
-```bash
-npm install
+## Funkcje
+
+- Model realny: wszystkie kwoty w dzisiejszych złotówkach, netto (wypłata z IKE po 60. r.ż. bez podatku Belki)
+- Edytowalne założenia: stopa zastąpienia, stopy zwrotu w obu fazach, inflacja
+- Ostrzeżenia: przekroczony roczny limit wpłat IKE, mniej niż 5 lat wpłat do 60. urodzin
+- Wynik udostępnialny linkiem — stan zakodowany w query param `?s=…`
+
+## Stack
+
+- [SvelteKit](https://svelte.dev/docs/kit) (Svelte 5, runes) + `adapter-static` — czysty statyczny SPA, bez backendu
+- Tailwind CSS v4 + [shadcn-svelte](https://shadcn-svelte.com)
+- Vitest — logika biznesowa w `src/lib/services/` to czysty TS z testami kolokowanymi
+- Hosting: Cloudflare Workers (statyczne assety, bez workera)
+
+## Development
+
+Wymagania: Node 24+, pnpm. Repo zawiera konfigurację [Dev Containera](.devcontainer/devcontainer.json) z kompletem narzędzi (Node, pnpm, wrangler).
+
+```sh
+pnpm install
+pnpm dev          # http://localhost:5173
 ```
 
-### Uruchomienie serwera deweloperskiego
-```bash
-npm run dev
+Pozostałe komendy:
+
+```sh
+pnpm test         # testy jednostkowe
+pnpm check        # kontrola typów (svelte-check)
+pnpm lint         # kontrola formatowania
+pnpm format       # formatowanie (prettier)
+pnpm build        # build produkcyjny do build/
+pnpm preview      # podgląd builda (http://localhost:4173)
 ```
 
-### Budowanie produkcyjne
-```bash
-npm run build
+## Deploy
+
+Build to czyste statyczne assety serwowane przez Cloudflare Workers (konfiguracja w [wrangler.jsonc](wrangler.jsonc)):
+
+```sh
+pnpm build
+wrangler deploy
 ```
 
-### Podgląd buildu produkcyjnego
-```bash
-npm run preview
+## Struktura
+
 ```
-
-### Uruchomienie testów
-```bash
-npm run test
-```
-
-### Uruchomienie testów z UI
-```bash
-npm run test:ui
-```
-
-### Sprawdzenie typów
-```bash
-npm run check
-```
-
-## Deployment na Cloudflare Workers
-
-### Pierwsze wdrożenie
-1. Zaloguj się do Cloudflare:
-```bash
-npx wrangler login
-```
-
-2. Wdróż aplikację:
-```bash
-npm run deploy
-```
-
-### Lokalne testowanie z Cloudflare Workers
-```bash
-npm run cf:dev
-```
-
-### Kolejne wdrożenia
-Po pierwszym wdrożeniu, wystarczy uruchomić:
-```bash
-npm run deploy
+src/lib/models/      – CalculatorInputs (jeden model wejść), typy wyników
+src/lib/services/    – logika biznesowa (czysty TS + testy): kalkulator, codec URL, stałe
+src/lib/state/       – reaktywny stan (runes) + synchronizacja query param
+src/lib/components/  – komponenty UI (w tym ui/ generowane przez shadcn-svelte)
+src/routes/          – strona główna (SPA, prerender, bez SSR)
 ```

@@ -1,11 +1,36 @@
-import { defineConfig } from 'vite'
-import { svelte } from '@sveltejs/vite-plugin-svelte'
+import { defineConfig } from 'vitest/config';
+import tailwindcss from '@tailwindcss/vite';
+import adapter from '@sveltejs/adapter-static';
+import { sveltekit } from '@sveltejs/kit/vite';
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [svelte()],
-  test: {
-    globals: true,
-    environment: 'jsdom',
-  },
-})
+	plugins: [
+		tailwindcss(),
+		sveltekit({
+			compilerOptions: {
+				// Force runes mode for the project, except for libraries. Can be removed in svelte 6.
+				runes: ({ filename }) =>
+					filename.split(/[/\\]/).includes('node_modules') ? undefined : true
+			},
+
+			adapter: adapter({ fallback: undefined })
+		})
+	],
+	// Dev Container (WSL): bind na 0.0.0.0, żeby port forwarding VS Code nie wisiał na IPv6/IPv4
+	server: { host: true },
+	preview: { host: true },
+	test: {
+		expect: { requireAssertions: true },
+		projects: [
+			{
+				extends: './vite.config.ts',
+				test: {
+					name: 'server',
+					environment: 'node',
+					include: ['src/**/*.{test,spec}.{js,ts}'],
+					exclude: ['src/**/*.svelte.{test,spec}.{js,ts}']
+				}
+			}
+		]
+	}
+});
