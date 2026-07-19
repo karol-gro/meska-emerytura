@@ -1,5 +1,8 @@
 {
 	"peacock.color": "#330033",
+	"files.associations": {
+		"*.css": "tailwindcss"
+	},
 	"workbench.colorCustomizations": {
 		"activityBar.activeBackground": "#660066",
 		"activityBar.background": "#660066",
@@ -26,7 +29,5 @@
 		"titleBar.inactiveBackground": "#33003399",
 		"titleBar.inactiveForeground": "#e7e7e799"
 	},
-	"files.associations": {
-		"*.css": "tailwindcss"
-	}
+	"peacock.remoteColor": "#330033"
 }
