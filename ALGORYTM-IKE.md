@@ -22,28 +22,28 @@ Dla kobiety w identycznej sytuacji wynik wynosi **0 zł** — i to zestawienie j
 
 ## 2. Dane wejściowe (podaje użytkownik)
 
-| Symbol | Nazwa | Zakres | Uwagi |
-|---|---|---|---|
-| `w` | Wiek | 18 – 59 | pełne lata (opcjonalnie z miesiącami — patrz § 8) |
-| `P` | Pensja miesięczna **netto** | > 0 | „na rękę"; patrz decyzja D1 |
+| Symbol | Nazwa                       | Zakres    | Uwagi                                                                                                                                                                 |
+| ------ | --------------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `w_m`  | Wiek w miesiącach           | 216 – 720 | wyliczany z **roku i miesiąca urodzenia**: `w_m = (rok_dziś − rok_ur) × 12 + (mies_dziś − mies_ur)`; pełny scenariusz dla wieku 18–59 lat, równo 60 lat = tylko `K60` |
+| `P`    | Pensja miesięczna **netto** | > 0       | „na rękę"; patrz decyzja D1                                                                                                                                           |
 
 ## 3. Założenia edytowalne (proponujemy domyślne wartości, użytkownik może zmienić)
 
-| Symbol | Nazwa | Domyślnie | Opis |
-|---|---|---|---|
-| `sz` | Stopa zastąpienia | 50% | docelowa emerytura jako % pensji netto |
-| `r_a` | Nominalna roczna stopa zwrotu — faza oszczędzania | 6,0% | portfel akcyjno-obligacyjny do 60. r.ż. |
-| `r_w` | Nominalna roczna stopa zwrotu — faza wypłat (60–65) | 3,5% | bezpieczne aktywa (obligacje, lokaty) |
-| `i` | Inflacja roczna | 2,5% | cel inflacyjny NBP |
+| Symbol | Nazwa                                               | Domyślnie | Opis                                    |
+| ------ | --------------------------------------------------- | --------- | --------------------------------------- |
+| `sz`   | Stopa zastąpienia                                   | 50%       | docelowa emerytura jako % pensji netto  |
+| `r_a`  | Nominalna roczna stopa zwrotu — faza oszczędzania   | 6,0%      | portfel akcyjno-obligacyjny do 60. r.ż. |
+| `r_w`  | Nominalna roczna stopa zwrotu — faza wypłat (60–65) | 3,5%      | bezpieczne aktywa (obligacje, lokaty)   |
+| `i`    | Inflacja roczna                                     | 2,5%      | cel inflacyjny NBP                      |
 
 ## 4. Stałe systemowe (konfiguracja aplikacji, nie do edycji przez użytkownika)
 
-| Stała | Wartość | Uwagi |
-|---|---|---|
-| `WIEK_EMERYTALNY_K` | 60 | wiek emerytalny kobiet |
-| `WIEK_EMERYTALNY_M` | 65 | wiek emerytalny mężczyzn |
-| `MIESIACE_LUKI` | 60 | `(65 − 60) × 12` |
-| `LIMIT_IKE_ROCZNY` | 28 260 zł (2026) | aktualizowana co roku stała konfiguracyjna |
+| Stała               | Wartość          | Uwagi                                      |
+| ------------------- | ---------------- | ------------------------------------------ |
+| `WIEK_EMERYTALNY_K` | 60               | wiek emerytalny kobiet                     |
+| `WIEK_EMERYTALNY_M` | 65               | wiek emerytalny mężczyzn                   |
+| `MIESIACE_LUKI`     | 60               | `(65 − 60) × 12`                           |
+| `LIMIT_IKE_ROCZNY`  | 28 260 zł (2026) | aktualizowana co roku stała konfiguracyjna |
 
 ## 5. Kluczowe decyzje projektowe
 
@@ -109,8 +109,11 @@ K60 = E × 60                                                  dla q_w = 0
 
 ### Krok 3. Długość fazy oszczędzania
 
+Liczona w pełnych miesiącach na podstawie roku i miesiąca urodzenia:
+
 ```
-n = (60 − w) × 12        # liczba miesięcznych wpłat do 60. urodzin
+w_m = (rok_dziś − rok_ur) × 12 + (mies_dziś − mies_ur)    # wiek w miesiącach
+n   = max(0, 60 × 12 − w_m)                                # miesięczne wpłaty do 60. urodzin
 ```
 
 ### Krok 4. Miesięczna wpłata na IKE — **wynik główny nr 2**
@@ -136,13 +139,12 @@ wynik_kobiety     = 0 zł                     # zawsze; sedno przekazu aplikacji
 
 ```mermaid
 flowchart TD
-    A[Wejście: wiek w, pensja P] --> B{Walidacja<br/>18 ≤ w ≤ 59, P > 0}
-    B -- błąd --> B1[Komunikat błędu]
-    B -- OK --> C[Założenia: sz, r_a, r_w, i<br/>domyślne lub zmienione]
+    A[Wejście: rok i miesiąc urodzenia, pensja P] --> B[Przycięcie do zakresów<br/>wiek 18–60 lat, P > 0]
+    B --> C[Założenia: sz, r_a, r_w, i<br/>domyślne lub zmienione]
     C --> D[Krok 0: stopy realne miesięczne q_a, q_w]
     D --> E[Krok 1: E = sz × P]
     E --> F[Krok 2: kapitał K60<br/>renta 60 wypłat z góry]
-    F --> G[Krok 3: n = 60 minus w razy 12]
+    F --> G[Krok 3: n = 720 minus wiek w miesiącach]
     G --> H[Krok 4: miesięczna wpłata S]
     H --> I{S × 12 > LIMIT_IKE_ROCZNY?}
     I -- tak --> I1[Ostrzeżenie: limit IKE przekroczony<br/>nadwyżka poza IKE]
@@ -153,15 +155,14 @@ flowchart TD
 
 ## 8. Walidacje i przypadki brzegowe
 
-| Warunek | Zachowanie |
-|---|---|
-| `w ≥ 60` | brak fazy oszczędzania — pokazujemy tylko `K60` („tyle musiałbyś mieć dziś") |
-| `w > 55` | ostrzeżenie: do 60. urodzin mniej niż 5 lat kalendarzowych wpłat — ryzyko niespełnienia warunku zwolnienia podatkowego IKE |
-| `S × 12 > LIMIT_IKE_ROCZNY` | ostrzeżenie + informacja, że nadwyżkę trzeba odkładać poza IKE (np. IKZE, konto maklerskie); wzmacnia przekaz o skali problemu |
-| `q_a = 0` lub `q_w = 0` | wzory graniczne z kroków 2 i 4 (bez dzielenia przez zero) |
-| `r < i` (realna stopa ujemna) | wzory działają dla `q < 0` — wynik poprawnie rośnie |
-| założenia poza rozsądnym zakresem | ograniczenia suwaków w UI, np. stopy 0–15%, inflacja 0–10%, `sz` 20–100% |
-| wiek z miesiącami | v1: pełne lata (zaokrąglenie `n` do pełnych miesięcy); ewentualnie data urodzenia w v2 |
+| Warunek                       | Zachowanie                                                                                                                                             |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `n = 0` (wiek ≥ 60 lat)       | brak fazy oszczędzania — pokazujemy tylko `K60` („tyle musiałbyś mieć dziś")                                                                           |
+| `0 < n < 60`                  | ostrzeżenie: do 60. urodzin mniej niż 5 lat wpłat — ryzyko niespełnienia warunku zwolnienia podatkowego IKE                                            |
+| `S × 12 > LIMIT_IKE_ROCZNY`   | ostrzeżenie + informacja, że nadwyżkę trzeba odkładać poza IKE (np. IKZE, konto maklerskie); wzmacnia przekaz o skali problemu                         |
+| `q_a = 0` lub `q_w = 0`       | wzory graniczne z kroków 2 i 4 (bez dzielenia przez zero)                                                                                              |
+| `r < i` (realna stopa ujemna) | wzory działają dla `q < 0` — wynik poprawnie rośnie                                                                                                    |
+| wejście poza zakresem         | wartość przycinana do najbliższej granicy zakresu (bez komunikatów błędów); zakresy suwaków: stopy 0–15%, inflacja 0–10%, `sz` 20–100%; wiek 18–60 lat |
 
 ## 9. Świadome uproszczenia (kandydaci na v2)
 
@@ -179,15 +180,4 @@ flowchart TD
 
 ## 10. Przykład liczbowy (założenia domyślne, pensja 8 000 zł netto → E = 4 000 zł)
 
-Kapitał wymagany w dniu 60. urodzin: **K60 ≈ 234 400 zł** (w dzisiejszych złotówkach;
-mniej niż naiwne 60 × 4 000 = 240 000 zł, bo kapitał w fazie wypłat dalej pracuje).
-
-| Wiek startu | Miesięcy wpłat | Wpłata S / mies. | Rocznie | Suma wpłat | Limit IKE |
-|---:|---:|---:|---:|---:|:---|
-| 25 | 420 | ≈ 293 zł | ≈ 3 520 zł | ≈ 123 200 zł | OK |
-| 30 | 360 | ≈ 378 zł | ≈ 4 534 zł | ≈ 136 000 zł | OK |
-| 40 | 240 | ≈ 686 zł | ≈ 8 232 zł | ≈ 164 600 zł | OK |
-| 50 | 120 | ≈ 1 646 zł | ≈ 19 749 zł | ≈ 197 500 zł | OK |
-| 55 | 60 | ≈ 3 592 zł | ≈ 43 108 zł | ≈ 215 500 zł | **przekroczony** + ostrzeżenie o 5 latach wpłat |
-
-Kobieta w identycznej sytuacji: **0 zł / miesiąc**.
+Można znaleźć w PRZYKLAD-IKE.md
