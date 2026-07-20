@@ -1,0 +1,16 @@
+# Nagłówki dla Cloudflare Workers (assets) – składnia `_headers`.
+# Kolejność ma znaczenie: dla danej ścieżki wygrywa pierwsza pasująca reguła.
+
+# Pliki z hashem w nazwie – po zmianie treści zmienia się URL, więc cache na miesiąc.
+/_app/immutable/*
+  Cache-Control: public, max-age=2592000, immutable
+
+# Manifest wersji SvelteKit-a – odpytywany, żeby wykryć nowy deploy, nie może wisieć w cache.
+/_app/version.json
+  Cache-Control: public, max-age=0, must-revalidate
+
+# HTML (SPA: `/` i `/index.html` to ten sam dokument) – krótki cache, nowy deploy wchodzi od ręki.
+/
+  Cache-Control: public, max-age=30, must-revalidate
+/index.html
+  Cache-Control: public, max-age=30, must-revalidate
