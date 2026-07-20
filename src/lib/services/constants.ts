@@ -1,10 +1,10 @@
 import type { CalculatorInputs, YearMonth } from '$lib/models/inputs';
 
-/** Stałe systemowe (§4 specyfikacji) — konfiguracja aplikacji, nie do edycji przez użytkownika */
+/** Stałe systemowe (§4 specyfikacji) – konfiguracja aplikacji, nie do edycji przez użytkownika */
 export const RETIREMENT_AGE_F = 60;
 export const RETIREMENT_AGE_M = 65;
 export const GAP_MONTHS = (RETIREMENT_AGE_M - RETIREMENT_AGE_F) * 12;
-/** Roczny limit wpłat na IKE — 3 × prognozowane przeciętne wynagrodzenie (wartość na 2026) */
+/** Roczny limit wpłat na IKE – 3 × prognozowane przeciętne wynagrodzenie (wartość na 2026) */
 export const IKE_ANNUAL_LIMIT = 28_260;
 /** Minimalna liczba lat kalendarzowych wpłat dla zwolnienia podatkowego IKE */
 export const MIN_IKE_CONTRIBUTION_YEARS = 5;
@@ -64,7 +64,7 @@ function birthDateForAgeMonths(ageMonths: number, now: YearMonth): YearMonth {
 }
 
 /**
- * Przycina wejścia do najbliższych dopuszczalnych wartości — pola „poprawiają się same".
+ * Przycina wejścia do najbliższych dopuszczalnych wartości – pola „poprawiają się same".
  * Wartości nieliczbowe (np. wyczyszczone pole) wracają do domyślnych.
  */
 export function clampInputs(inputs: CalculatorInputs, now: YearMonth): CalculatorInputs {

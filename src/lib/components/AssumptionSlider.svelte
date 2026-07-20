@@ -23,7 +23,7 @@
 		onchange: (fraction: number) => void;
 	} = $props();
 
-	// suwak operuje na procentach — czytelne kroki (0.1 p.p.) bez błędów zmiennoprzecinkowych
+	// suwak operuje na procentach – czytelne kroki (0.1 p.p.) bez błędów zmiennoprzecinkowych
 	const percent = $derived(Math.round(value * 1000) / 10);
 </script>
 

@@ -5,9 +5,9 @@ import { clampInputs, defaultInputs } from '$lib/services/constants';
 
 /**
  * Reaktywny stan kalkulatora: wejścia + wynik wyliczany na bieżąco.
- * Logika liczenia i kodowania żyje w serwisach — tutaj tylko spięcie z runes i URL-em.
+ * Logika liczenia i kodowania żyje w serwisach – tutaj tylko spięcie z runes i URL-em.
  *
- * `inputs` może chwilowo być poza zakresem (użytkownik w trakcie pisania) — wynik
+ * `inputs` może chwilowo być poza zakresem (użytkownik w trakcie pisania) – wynik
  * i URL zawsze liczymy z wersji przyciętej (`sanitized`), a `commit()` (na blur pola)
  * przycina też same pola formularza.
  */
@@ -22,7 +22,7 @@ export class CalculatorState {
 		return url.toString();
 	});
 
-	/** Czy aplikację otwarto z linka z wynikiem (poprawny `?s=`) — wtedy od razu pokazujemy wyniki */
+	/** Czy aplikację otwarto z linka z wynikiem (poprawny `?s=`) – wtedy od razu pokazujemy wyniki */
 	readonly startedFromLink: boolean;
 
 	private baseUrl: string;
@@ -36,12 +36,12 @@ export class CalculatorState {
 		this.inputs = fromLink ?? defaultInputs(now);
 	}
 
-	/** Przycina pola formularza do zakresów — wywoływane na blur/change pól */
+	/** Przycina pola formularza do zakresów – wywoływane na blur/change pól */
 	commit(): void {
 		this.inputs = this.sanitized;
 	}
 
-	/** Usuwa `?s=` z paska adresu po wejściu z udostępnionego linka — wywołać raz po starcie */
+	/** Usuwa `?s=` z paska adresu po wejściu z udostępnionego linka – wywołać raz po starcie */
 	stripShareParam(): void {
 		if (this.startedFromLink) history.replaceState(history.state, '', this.baseUrl);
 	}

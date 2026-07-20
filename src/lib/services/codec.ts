@@ -37,7 +37,7 @@ export function encode(inputs: CalculatorInputs): string {
 
 /**
  * Dekoduje string z query param. Zwraca `null` przy jakimkolwiek błędzie
- * (zła wersja, zła liczba pól, nie-liczby, wartości poza zakresem) —
+ * (zła wersja, zła liczba pól, nie-liczby, wartości poza zakresem) –
  * aplikacja wtedy startuje z wartościami domyślnymi.
  */
 export function decode(encoded: string, now: YearMonth): CalculatorInputs | null {

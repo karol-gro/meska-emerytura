@@ -4,4 +4,4 @@ allowBuilds:
   sharp: false
   workerd: false
 packages:
-  - "."
+  - '.'

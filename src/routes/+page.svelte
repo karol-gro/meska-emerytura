@@ -20,26 +20,34 @@
 	let showResults = $state(calc.startedFromLink);
 	let resultsSection = $state<HTMLElement>();
 
+	// czekamy na flush DOM-u (tick) i domknięcie layoutu przeglądarki (rAF),
+	// inaczej scrollIntoView liczy pozycję zanim strona się w pełni ułoży
+	async function scrollToResults() {
+		await tick();
+		requestAnimationFrame(() => {
+			resultsSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		});
+	}
+
 	async function reveal() {
 		showResults = true;
-		await tick();
-		resultsSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		await scrollToResults();
 	}
 
 	// dane z udostępnionego linka znikają z paska adresu, a strona przewija się do wyników
 	onMount(() => {
 		if (calc.startedFromLink) {
 			calc.stripShareParam();
-			resultsSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			scrollToResults();
 		}
 	});
 </script>
 
 <svelte:head>
-	<title>Męska emerytura — kalkulator nierówności emerytalnych</title>
+	<title>Męska emerytura – kalkulator nierówności emerytalnych</title>
 	<meta
 		name="description"
-		content="Ile mężczyzna musi odkładać na IKE, żeby przejść na emeryturę w wieku 60 lat — tak jak kobieta."
+		content="Ile mężczyzna musi odkładać na IKE, żeby przejść na emeryturę w wieku 60 lat – tak jak kobieta."
 	/>
 </svelte:head>
 
@@ -52,7 +60,7 @@
 			Męska emerytura
 		</h1>
 		<p class="text-lg text-muted-foreground">
-			Kobiety przechodzą na emeryturę w wieku 60 lat, mężczyźni — 65. Policz, ile musisz odkładać,
+			Kobiety przechodzą na emeryturę w wieku 60 lat, mężczyźni – 65. Policz, ile musisz odkładać,
 			aby sfinansować te 5 lat różnicy.
 		</p>
 	</header>

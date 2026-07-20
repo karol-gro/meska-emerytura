@@ -24,7 +24,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-
       - name: Build, test and deploy in Dev Container
         uses: devcontainers/ci@v0.3
         with:

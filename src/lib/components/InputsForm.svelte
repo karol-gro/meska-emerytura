@@ -25,7 +25,7 @@
 	const minBirthYear = $derived(state.now.year - AGE_RANGE.max);
 	const maxBirthYear = $derived(state.now.year - AGE_RANGE.min);
 
-	// wiek liczymy z przyciętych wejść — w trakcie pisania pole może być chwilowo puste
+	// wiek liczymy z przyciętych wejść – w trakcie pisania pole może być chwilowo puste
 	const age = $derived.by(() => {
 		const months = ageInMonths(state.sanitized, state.now);
 		return { years: Math.floor(months / 12), months: months % 12 };

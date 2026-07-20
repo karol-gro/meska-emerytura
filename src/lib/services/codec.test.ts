@@ -58,7 +58,7 @@ describe('round-trip', () => {
 	});
 });
 
-describe('decode — odporność na błędne wejście', () => {
+describe('decode – odporność na błędne wejście', () => {
 	const valid = encode(defaultInputs(NOW));
 
 	it('zwraca null dla śmieciowych stringów', () => {

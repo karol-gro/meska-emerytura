@@ -8,6 +8,10 @@ Kalkulator „Męska emerytura" — czysto frontendowa apka (SvelteKit + adapter
 
 Język: UI, komentarze i dokumenty po polsku; identyfikatory w kodzie po angielsku.
 
+## Typografia
+
+W `src/` **nie używamy długiego myślnika `—`** (ani `―`) — w miejscach, gdzie klasycznie stawia się myślnik, piszemy półpauzę `–` (U+2013). Dotyczy tekstów UI, komentarzy i dokumentów w kodzie. Pilnuje tego `scripts/check-dashes.js` (wpięty w `pnpm lint` i `pnpm format`) oraz test w `scripts/check-dashes.test.ts`. Świadomy wyjątek (np. pauza jako placeholder braku wartości): marker `allow-em-dash` w tej samej linii.
+
 ## Komendy
 
 ```sh
@@ -15,6 +19,7 @@ pnpm dev          # serwer deweloperski (port 5173)
 pnpm test         # wszystkie testy jednostkowe (vitest --run)
 pnpm test:unit -- --run src/lib/services/calculator.test.ts   # jeden plik testów
 pnpm check        # svelte-check (typy)
+pnpm lint:dashes -- --fix   # zamiana — na – w src/ (część `pnpm format`)
 pnpm lint         # prettier --check
 pnpm format       # prettier --write
 pnpm build        # statyczny build do build/

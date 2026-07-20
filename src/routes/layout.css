@@ -7,11 +7,11 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Motyw „Midnight" z DESIGN.md — aplikacja jest wyłącznie ciemna (brak wariantu jasnego).
+ * Motyw „Midnight" z DESIGN.md – aplikacja jest wyłącznie ciemna (brak wariantu jasnego).
  * Mapowanie tokenów Material → shadcn:
  *   surface/background → background, surface-container → card, outline-variant → border,
  *   primary (Deep Cobalt) → primary, secondary-container → secondary,
- *   tertiary (Crimson Warning — „luka") → destructive.
+ *   tertiary (Crimson Warning – „luka") → destructive.
  */
 :root {
 	color-scheme: dark;
@@ -40,7 +40,7 @@
 	--chart-3: #bcc7dd;
 	--chart-4: #86a0cd;
 	--chart-5: #8e9099;
-	/* Sharp corners — brutalistyczne 90° na wszystkich kontenerach */
+	/* Sharp corners – brutalistyczne 90° na wszystkich kontenerach */
 	--radius: 0rem;
 	--sidebar: #131b2e;
 	--sidebar-foreground: #dae2fd;
@@ -113,7 +113,7 @@
 		@apply font-heading;
 	}
 	/* Natywne dropdowny (select): Chromium przełącza listę na jasną, gdy select ma
-	   własne tło — wymuszamy ciemny popover zgodny z motywem */
+	   własne tło – wymuszamy ciemny popover zgodny z motywem */
 	select {
 		color-scheme: dark;
 	}
@@ -124,7 +124,7 @@
 }
 
 @utility label-caps {
-	/* „label-bold” z DESIGN.md — nagłówki sekcji w stylu raportu/dossier */
+	/* „label-bold” z DESIGN.md – nagłówki sekcji w stylu raportu/dossier */
 	font-size: 0.875rem;
 	line-height: 1.25rem;
 	font-weight: 700;
@@ -133,7 +133,7 @@
 }
 
 @utility data-display {
-	/* „data-display” z DESIGN.md — kluczowe liczby mają być „ciężkie” */
+	/* „data-display” z DESIGN.md – kluczowe liczby mają być „ciężkie” */
 	font-family: var(--font-heading);
 	font-weight: 800;
 	letter-spacing: -0.03em;

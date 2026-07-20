@@ -19,7 +19,7 @@
 		NO_ACCUMULATION_PHASE: {
 			title: 'Brak fazy oszczędzania',
 			description:
-				'Masz już 60 lat — pokazujemy tylko kapitał, jaki musiałbyś mieć zgromadzony dziś.'
+				'Masz już 60 lat – pokazujemy tylko kapitał, jaki musiałbyś mieć zgromadzony dziś.'
 		}
 	};
 </script>

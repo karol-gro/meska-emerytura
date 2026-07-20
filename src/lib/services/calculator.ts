@@ -21,7 +21,7 @@ export function monthlyRealRate(nominalAnnual: number, inflation: number): numbe
 }
 
 /**
- * Krok 2: wartość obecna renty — `payments` comiesięcznych wypłat kwoty `amount`,
+ * Krok 2: wartość obecna renty – `payments` comiesięcznych wypłat kwoty `amount`,
  * płatnych z góry, przy miesięcznej stopie `q`.
  */
 export function annuityDuePresentValue(amount: number, payments: number, q: number): number {
@@ -66,7 +66,7 @@ export function validate(inputs: CalculatorInputs, now: YearMonth): ValidationEr
 
 /**
  * Algorytm z ALGORYTM-IKE.md §6. Zakłada wejścia zwalidowane przez `validate()`.
- * `now` jako parametr — deterministyczne testy i spójny wiek w całej aplikacji.
+ * `now` jako parametr – deterministyczne testy i spójny wiek w całej aplikacji.
  */
 export function calculate(inputs: CalculatorInputs, now: YearMonth): CalculationResult {
 	const ageMonths = ageInMonths(inputs, now);

@@ -11,7 +11,9 @@
 			"Bash(pnpm format *)",
 			"Bash(pnpm lint *)",
 			"Skill(run)",
-			"Skill(run:*)"
+			"Skill(run:*)",
+			"Bash(node scripts/check-dashes.js --fix)",
+			"Bash(node scripts/check-dashes.js)"
 		]
 	}
 }

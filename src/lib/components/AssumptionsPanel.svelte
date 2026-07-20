@@ -54,7 +54,7 @@
 					onchange={(v) => (calc.inputs.replacementRate = v)}
 				/>
 				<AssumptionSlider
-					label="Stopa zwrotu — faza oszczędzania"
+					label="Stopa zwrotu – faza oszczędzania"
 					description="Nominalna, rocznie; portfel akcyjno-obligacyjny do 60. r.ż."
 					value={calc.inputs.returnAccum}
 					min={INPUT_RANGES.returnAccum.min}
@@ -62,7 +62,7 @@
 					onchange={(v) => (calc.inputs.returnAccum = v)}
 				/>
 				<AssumptionSlider
-					label="Stopa zwrotu — faza wypłat (60–65)"
+					label="Stopa zwrotu – faza wypłat (60–65)"
 					description="Nominalna, rocznie; bezpieczne aktywa"
 					value={calc.inputs.returnPayout}
 					min={INPUT_RANGES.returnPayout.min}

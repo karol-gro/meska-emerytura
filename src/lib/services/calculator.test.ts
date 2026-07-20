@@ -69,7 +69,7 @@ describe('wiek w pełnych miesiącach', () => {
 });
 
 describe('przykład liczbowy z §10 (pensja 8000 zł, założenia domyślne)', () => {
-	it('K60 ≈ 234 400 zł — mniej niż naiwne 60 × 4000', () => {
+	it('K60 ≈ 234 400 zł – mniej niż naiwne 60 × 4000', () => {
 		const result = calculate(inputsForAge(30), NOW);
 		expect(result.targetPension).toBe(4000);
 		expect(result.requiredCapital).toBeCloseTo(234_400, -3); // tolerancja ±500
@@ -88,7 +88,7 @@ describe('przykład liczbowy z §10 (pensja 8000 zł, założenia domyślne)', (
 		const result = calculate(inputsForAge(age), NOW);
 		expect(result.monthsOfSaving).toBe(months);
 		expect(result.monthlyContribution).not.toBeNull();
-		// tolerancja 0.5% — wartości w specyfikacji są zaokrąglone
+		// tolerancja 0.5% – wartości w specyfikacji są zaokrąglone
 		expect(Math.abs(result.monthlyContribution! - monthly)).toBeLessThan(monthly * 0.005);
 		expect(result.warnings.includes('IKE_LIMIT_EXCEEDED')).toBe(ikeExceeded);
 		expect(result.totalContributions).toBeCloseTo(result.monthlyContribution! * months, 6);
@@ -144,7 +144,7 @@ describe('funkcje pomocnicze', () => {
 		expect(sinkingFundPayment(6000, 60, 0)).toBe(100);
 	});
 
-	it('sinkingFundPayment odtwarza cel — spójność FV(S) = K', () => {
+	it('sinkingFundPayment odtwarza cel – spójność FV(S) = K', () => {
 		const q = monthlyRealRate(0.06, 0.025);
 		const s = sinkingFundPayment(100_000, 240, q);
 		const futureValue = (s * (Math.pow(1 + q, 240) - 1)) / q;
@@ -157,7 +157,7 @@ describe('validate', () => {
 		expect(validate(inputsForAge(30), NOW)).toEqual([]);
 	});
 
-	it('odrzuca wiek poza zakresem — z dokładnością do miesiąca', () => {
+	it('odrzuca wiek poza zakresem – z dokładnością do miesiąca', () => {
 		// 17 lat i 11 mies. → za młody
 		expect(validate(inputsForAge(18, { birthMonth: NOW.month + 1 }), NOW)).toContainEqual({
 			field: 'birthYear',
