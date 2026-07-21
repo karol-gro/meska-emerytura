@@ -40,7 +40,7 @@ pnpm preview      # podgląd builda (http://localhost:4173)
 
 ## Deploy
 
-Build to czyste statyczne assety serwowane przez Cloudflare Workers (konfiguracja w [wrangler.jsonc](wrangler.jsonc)):
+Build to czyste statyczne assety serwowane przez Cloudflare Workers (konfiguracja w [wrangler.toml](wrangler.toml)):
 
 ```sh
 pnpm build

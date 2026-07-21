@@ -92,7 +92,7 @@
 	<footer class="flex items-end justify-between gap-4 text-xs text-muted-foreground">
 		<div class="grid gap-2">
 			<p>
-				Na licencji 
+				Na licencji
 				<a
 					href="https://www.gnu.org/licenses/agpl-3.0.html"
 					target="_blank"
@@ -101,8 +101,8 @@
 				>.
 			</p>
 			<p>
-				To prognoza, nie obietnica. Nikt nie wie, jak rynki i inflacja zachowają się przez najbliższe
-				30 lat.
+				To prognoza, nie obietnica. Nikt nie wie, jak rynki i inflacja zachowają się przez
+				najbliższe 30 lat.
 			</p>
 			<p>
 				Wyliczona wpłata jest w dzisiejszych pieniądzach, co roku podnoś ją o inflację. Przeczytaj
@@ -114,7 +114,6 @@
 				> o tym, jak te kwoty są wyliczane.
 			</p>
 			<p>Nie przechowujemy żadnych wprowadzonych tu danych po naszej stronie.</p>
-
 		</div>
 
 		<!-- Znak GitHuba pozostaje monochromatyczny – wytyczne marki GitHub nie pozwalają go przebarwiać -->

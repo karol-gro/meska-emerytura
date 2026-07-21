@@ -147,5 +147,5 @@ do 60. urodzin) doszłoby ryzyko niespełnienia warunku 5 lat kalendarzowych wp�
 
 ---
 
-Wartości policzone dokładnie tymi samymi wzorami co [calculator.ts](src/lib/services/calculator.ts);
-testy w [calculator.test.ts](src/lib/services/calculator.test.ts) weryfikują je z tolerancją 0,5%.
+Wartości policzone dokładnie tymi samymi wzorami co [calculator.ts](../src/lib/services/calculator.ts);
+testy w [calculator.test.ts](../src/lib/services/calculator.test.ts) weryfikują je z tolerancją 0,5%.

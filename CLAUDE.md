@@ -41,10 +41,10 @@ Przepływ danych:
 5. **`src/lib/state/calculator.svelte.ts`** — jedyna warstwa reaktywna: klasa `CalculatorState` (runes), `$derived` wynik i `shareUrl`, synchronizacja paska adresu przez `history.replaceState` z debounce.
 6. **`src/routes/+page.svelte`** — składa komponenty z `src/lib/components/`; stan wędruje w dół jako prop.
 
-SSR jest wyłączony (`ssr = false`, `prerender = true` w `src/routes/+layout.ts`) — build to czysty statyczny SPA, hostowany jako assety Cloudflare Workers (`wrangler.jsonc`). Nie dodawaj kodu serwerowego (`+page.server.ts`, endpointy) — złamie to model hostingu.
+SSR jest wyłączony (`ssr = false`, `prerender = true` w `src/routes/+layout.ts`) — build to czysty statyczny SPA, hostowany jako assety Cloudflare Workers (`wrangler.toml`). Nie dodawaj kodu serwerowego (`+page.server.ts`, endpointy) — złamie to model hostingu.
 
 Vite binduje się na `0.0.0.0` (konfig `server.host`) — wymagane, żeby port forwarding z Dev Containera (WSL) nie wisiał; nie usuwaj.
 
 ## Testy
 
-Testy kalkulatora weryfikują przykład liczbowy z docs/IKE-ALGORYTM.md §10 (K60 ≈ 234 400 zł, tabela wieków) i przypadki brzegowe z §8. Przy zmianie algorytmu najpierw zaktualizuj specyfikację i wartości oczekiwane w testach. Testy codeca: round-trip + odporność na śmieciowe wejście.
+Testy kalkulatora weryfikują przykład liczbowy z docs/IKE-ALGORYTM.md §9 (K60 ≈ 234 400 zł, tabela wieków) i przypadki brzegowe z §8. Przy zmianie algorytmu najpierw zaktualizuj specyfikację i wartości oczekiwane w testach. Testy codeca: round-trip + odporność na śmieciowe wejście.
