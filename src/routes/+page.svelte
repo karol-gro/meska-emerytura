@@ -9,6 +9,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { CalculatorState } from '$lib/state/calculator.svelte';
 	import unequalIcon from '$lib/assets/unequal.svg';
+	import { IconCode } from '@tabler/icons-svelte';
 
 	const today = new Date();
 	const calc = new CalculatorState(
@@ -92,7 +93,21 @@
 	<footer class="flex items-end justify-between gap-4 text-xs text-muted-foreground">
 		<div class="grid gap-2">
 			<p>
-				Na licencji
+				Przygotowane przez
+				<a
+					href="https://kg-academy.pl"
+					target="_blank"
+					rel="noopener"
+					class="underline underline-offset-2 hover:text-foreground"
+				>
+					<IconCode
+						size={14}
+						stroke={2}
+						aria-hidden="true"
+						class="mr-1 inline-block align-text-bottom"
+					/>KG Academy</a
+				>
+				na licencji
 				<a
 					href="https://www.gnu.org/licenses/agpl-3.0.html"
 					target="_blank"
