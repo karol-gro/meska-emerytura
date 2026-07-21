@@ -8,7 +8,7 @@ sfinansować **5-letnią lukę** (60 → 65 lat), zanim zacznie otrzymywać emer
 
 Aplikacja obrazuje koszt tej nierówności: liczy, **ile mężczyzna musi mieć zgromadzone na
 IKE w dniu 60. urodzin** oraz **ile musi w tym celu odkładać co miesiąc** od dziś.
-Dla kobiety w identycznej sytuacji wynik wynosi **0 zł** — i to zestawienie jest sednem przekazu.
+Dla kobiety w identycznej sytuacji wynik wynosi **0 zł**..
 
 ### Dlaczego IKE
 
@@ -18,7 +18,7 @@ Dla kobiety w identycznej sytuacji wynik wynosi **0 zł** — i to zestawienie j
 - Warunek zwolnienia: wpłaty w **co najmniej 5 dowolnych latach kalendarzowych** (albo ponad
   połowa wartości wpłat najpóźniej 5 lat przed wnioskiem o wypłatę) — patrz walidacje w § 8.
 - Roczny **limit wpłat** na IKE (3 × prognozowane przeciętne wynagrodzenie miesięczne;
-  w 2026 r.: 28 260 zł) jest realnym ograniczeniem — algorytm musi go sprawdzać.
+  w 2026 r.: 28 260 zł) jest realnym ograniczeniem.
 
 ## 2. Dane wejściowe (podaje użytkownik)
 

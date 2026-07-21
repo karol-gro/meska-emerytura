@@ -1,6 +1,6 @@
 # Przykład liczbowy krok po kroku
 
-Pełne przeliczenie przykładu z [IKE-ALGORYTM.md](IKE-ALGORYTM.md) § 10 — mężczyzna z pensją
+Pełne przeliczenie przykładu z [IKE-ALGORYTM.md](IKE-ALGORYTM.md) § 9 — mężczyzna z pensją
 **8 000 zł netto** i założeniami domyślnymi. Szczegółowo liczymy wariant **30-latka**
 (dokładnie 30 lat, miesiąc urodzenia = bieżący), na końcu tabela dla pozostałych wieków.
 
