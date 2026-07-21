@@ -60,8 +60,11 @@
 			Męska emerytura
 		</h1>
 		<p class="text-lg text-muted-foreground">
-			Kobiety przechodzą na emeryturę w wieku 60 lat, mężczyźni – 65. Policz, ile musisz odkładać,
-			aby sfinansować te 5 lat różnicy.
+			Kobiety przechodzą na emeryturę w wieku 60 lat, mężczyźni – 65. Mężczyzna, jeśli chce przestać pracować w wieku 60 lat, musi samemu odłożyć pieniądze na IKE.
+		</p>
+		<p class="text-lg text-muted-foreground">
+			Policz, ile musisz odkładać,
+			aby sfinansować emeryturę w wieku 60 lat.
 		</p>
 	</header>
 
@@ -91,6 +94,15 @@
 			To prognoza, nie obietnica. Nikt nie wie, jak rynki i inflacja zachowają się przez najbliższe
 			30 lat, dlatego wynik traktuj jako punkt odniesienia.
 		</p>
-		<p>Wyliczona wpłata jest w dzisiejszych pieniądzach, co roku podnoś ją o inflację.</p>
+		<p>
+			Wyliczona wpłata jest w dzisiejszych pieniądzach, co roku podnoś ją o inflację. Przeczytaj
+			<a
+				href="https://github.com/karol-gro/meska-emerytura/blob/main/docs/IKE-ALGORYTM.md"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="underline underline-offset-2 hover:text-foreground">tutaj</a
+			> o tym, jak te kwoty są wyliczane.
+		</p>
+		<p>Nie przechowujemy żadnych wprowadzonych tu danych po naszej stronie.</p>
 	</footer>
 </main>
