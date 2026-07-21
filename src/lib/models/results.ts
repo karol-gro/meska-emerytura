@@ -2,13 +2,10 @@ export type CalculatorWarning =
 	/** S × 12 przekracza roczny limit wpłat na IKE – nadwyżka musi trafić poza IKE */
 	| 'IKE_LIMIT_EXCEEDED'
 	/** w > 55 – mniej niż 5 lat kalendarzowych wpłat do 60. urodzin (warunek zwolnienia podatkowego IKE) */
-	| 'LESS_THAN_5_YEARS'
-	/** w ≥ 60 – brak fazy oszczędzania, pokazujemy tylko wymagany kapitał */
-	| 'NO_ACCUMULATION_PHASE';
+	| 'LESS_THAN_5_YEARS';
 
 /**
  * Wynik kalkulacji. Wszystkie kwoty realne (w dzisiejszych złotówkach), netto.
- * Pola fazy oszczędzania są `null`, gdy brak fazy oszczędzania (w ≥ 60).
  */
 export interface CalculationResult {
 	/** wiek w pełnych latach (floor z ageMonths / 12) */
@@ -22,13 +19,13 @@ export interface CalculationResult {
 	/** n – liczba miesięcznych wpłat do 60. urodzin */
 	monthsOfSaving: number;
 	/** S – miesięczna wpłata na IKE (wynik główny nr 2) */
-	monthlyContribution: number | null;
+	monthlyContribution: number;
 	/** S / P – udział wpłaty w pensji */
-	salaryShare: number | null;
+	salaryShare: number;
 	/** S × n – suma wpłat z własnej kieszeni */
-	totalContributions: number | null;
+	totalContributions: number;
 	/** S × 12 – do porównania z rocznym limitem IKE */
-	annualContribution: number | null;
+	annualContribution: number;
 	warnings: CalculatorWarning[];
 }
 

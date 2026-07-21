@@ -78,26 +78,10 @@ export function calculate(inputs: CalculatorInputs, now: YearMonth): Calculation
 	const targetPension = inputs.replacementRate * inputs.netSalary;
 	// Krok 2: kapitał wymagany w dniu 60. urodzin
 	const requiredCapital = annuityDuePresentValue(targetPension, GAP_MONTHS, qPayout);
-	// Krok 3: długość fazy oszczędzania w pełnych miesiącach
-	const monthsOfSaving = Math.max(0, RETIREMENT_AGE_F * 12 - ageMonths);
+	// Krok 3: długość fazy oszczędzania w pełnych miesiącach (wiek ≤ 59 lat 11 mies. ⇒ n ≥ 1)
+	const monthsOfSaving = RETIREMENT_AGE_F * 12 - ageMonths;
 
 	const warnings: CalculatorWarning[] = [];
-
-	if (monthsOfSaving === 0) {
-		warnings.push('NO_ACCUMULATION_PHASE');
-		return {
-			age,
-			ageMonths,
-			targetPension,
-			requiredCapital,
-			monthsOfSaving,
-			monthlyContribution: null,
-			salaryShare: null,
-			totalContributions: null,
-			annualContribution: null,
-			warnings
-		};
-	}
 
 	// Krok 4: miesięczna wpłata
 	const monthlyContribution = sinkingFundPayment(requiredCapital, monthsOfSaving, qAccum);

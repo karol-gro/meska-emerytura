@@ -55,13 +55,7 @@ describe('wiek w pełnych miesiącach', () => {
 		expect(result.monthsOfSaving).toBe(355);
 	});
 
-	it('dokładnie 60. urodziny → n = 0', () => {
-		const result = calculate(inputsForAge(60), NOW);
-		expect(result.ageMonths).toBe(720);
-		expect(result.monthsOfSaving).toBe(0);
-	});
-
-	it('miesiąc przed 60. urodzinami → n = 1', () => {
+	it('miesiąc przed 60. urodzinami (górna granica) → n = 1', () => {
 		const result = calculate(inputsForAge(60, { birthMonth: NOW.month + 1 }), NOW);
 		expect(result.ageMonths).toBe(719);
 		expect(result.monthsOfSaving).toBe(1);
@@ -87,13 +81,12 @@ describe('przykład liczbowy z §10 (pensja 8000 zł, założenia domyślne)', (
 	it.each(table)('wiek $age → S ≈ $monthly zł/mies.', ({ age, months, monthly, ikeExceeded }) => {
 		const result = calculate(inputsForAge(age), NOW);
 		expect(result.monthsOfSaving).toBe(months);
-		expect(result.monthlyContribution).not.toBeNull();
 		// tolerancja 0.5% – wartości w specyfikacji są zaokrąglone
-		expect(Math.abs(result.monthlyContribution! - monthly)).toBeLessThan(monthly * 0.005);
+		expect(Math.abs(result.monthlyContribution - monthly)).toBeLessThan(monthly * 0.005);
 		expect(result.warnings.includes('IKE_LIMIT_EXCEEDED')).toBe(ikeExceeded);
-		expect(result.totalContributions).toBeCloseTo(result.monthlyContribution! * months, 6);
-		expect(result.annualContribution).toBeCloseTo(result.monthlyContribution! * 12, 6);
-		expect(result.salaryShare).toBeCloseTo(result.monthlyContribution! / 8000, 12);
+		expect(result.totalContributions).toBeCloseTo(result.monthlyContribution * months, 6);
+		expect(result.annualContribution).toBeCloseTo(result.monthlyContribution * 12, 6);
+		expect(result.salaryShare).toBeCloseTo(result.monthlyContribution / 8000, 12);
 	});
 });
 
@@ -113,16 +106,7 @@ describe('przypadki brzegowe (§8)', () => {
 			NOW
 		);
 		expect(negative.requiredCapital).toBeGreaterThan(4000 * 60);
-		expect(negative.monthlyContribution!).toBeGreaterThan(negative.requiredCapital / 360);
-	});
-
-	it('wiek równo 60 lat → brak fazy oszczędzania, tylko wymagany kapitał + ostrzeżenie', () => {
-		const result = calculate(inputsForAge(60), NOW);
-		expect(result.monthsOfSaving).toBe(0);
-		expect(result.monthlyContribution).toBeNull();
-		expect(result.salaryShare).toBeNull();
-		expect(result.requiredCapital).toBeGreaterThan(0);
-		expect(result.warnings).toContain('NO_ACCUMULATION_PHASE');
+		expect(negative.monthlyContribution).toBeGreaterThan(negative.requiredCapital / 360);
 	});
 
 	it('mniej niż 60 miesięcy oszczędzania → ostrzeżenie o 5 latach wpłat', () => {
@@ -165,8 +149,13 @@ describe('validate', () => {
 		});
 		// równo 18 lat → OK
 		expect(validate(inputsForAge(18), NOW)).toEqual([]);
-		// równo 60 lat → OK (widok „tyle musiałbyś mieć dziś")
-		expect(validate(inputsForAge(60), NOW)).toEqual([]);
+		// 59 lat i 11 mies. (miesiąc przed 60. urodzinami) → górna granica, OK
+		expect(validate(inputsForAge(60, { birthMonth: NOW.month + 1 }), NOW)).toEqual([]);
+		// równo 60 lat → poza zakresem (brak fazy oszczędzania został usunięty)
+		expect(validate(inputsForAge(60), NOW)).toContainEqual({
+			field: 'birthYear',
+			code: 'OUT_OF_RANGE'
+		});
 		// 60 lat i 1 miesiąc → poza zakresem
 		expect(validate(inputsForAge(60, { birthMonth: NOW.month - 1 }), NOW)).toContainEqual({
 			field: 'birthYear',

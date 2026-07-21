@@ -62,7 +62,7 @@
 		</h1>
 		<p class="text-lg text-muted-foreground">
 			Kobiety przechodzą na emeryturę w wieku 60 lat, mężczyźni – 65. Mężczyzna, jeśli chce przestać
-			pracować w wieku 60 lat, musi samemu odłożyć pieniądze na IKE.
+			pracować w wieku 60 lat, musi samemu odłożyć środki.
 		</p>
 		<p class="text-lg text-muted-foreground">
 			Policz, ile musisz odkładać, aby sfinansować emeryturę w wieku 60 lat.

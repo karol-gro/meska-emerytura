@@ -31,10 +31,10 @@ describe('clampInputs', () => {
 		expect(clamped.returnPayout).toBe(0.035);
 	});
 
-	it('wiek powyżej 60 lat → dokładnie 60 (720 miesięcy)', () => {
+	it('wiek powyżej górnej granicy → dokładnie 59 lat i 11 mies. (719 miesięcy)', () => {
 		const clamped = clampInputs(inputs({ birthYear: 1950, birthMonth: 1 }), NOW);
-		expect(ageInMonths(clamped, NOW)).toBe(720);
-		expect(clamped).toMatchObject({ birthYear: 1966, birthMonth: 6 });
+		expect(ageInMonths(clamped, NOW)).toBe(719);
+		expect(clamped).toMatchObject({ birthYear: 1966, birthMonth: 7 });
 	});
 
 	it('wiek poniżej 18 lat → dokładnie 18 (216 miesięcy)', () => {
@@ -46,8 +46,8 @@ describe('clampInputs', () => {
 	it('przycięcie wieku zachowuje granicę miesiąca przy przejściu przez rok', () => {
 		const nowMarch: YearMonth = { year: 2026, month: 3 };
 		const clamped = clampInputs(inputs({ birthYear: 1960, birthMonth: 1 }), nowMarch);
-		expect(ageInMonths(clamped, nowMarch)).toBe(720);
-		expect(clamped).toMatchObject({ birthYear: 1966, birthMonth: 3 });
+		expect(ageInMonths(clamped, nowMarch)).toBe(719);
+		expect(clamped).toMatchObject({ birthYear: 1966, birthMonth: 4 });
 	});
 
 	it('miesiąc urodzenia poza 1–12 → przycięty', () => {

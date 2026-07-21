@@ -8,7 +8,6 @@ sfinansować **5-letnią lukę** (60 → 65 lat), zanim zacznie otrzymywać emer
 
 Aplikacja obrazuje koszt tej nierówności: liczy, **ile mężczyzna musi mieć zgromadzone na
 IKE w dniu 60. urodzin** oraz **ile musi w tym celu odkładać co miesiąc** od dziś.
-Dla kobiety w identycznej sytuacji wynik wynosi **0 zł**..
 
 ### Dlaczego IKE
 
@@ -24,7 +23,7 @@ Dla kobiety w identycznej sytuacji wynik wynosi **0 zł**..
 
 | Symbol | Nazwa                       | Zakres    | Uwagi                                                                                                                                                                 |
 | ------ | --------------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `w_m`  | Wiek w miesiącach           | 216 – 720 | wyliczany z **roku i miesiąca urodzenia**: `w_m = (rok_dziś − rok_ur) × 12 + (mies_dziś − mies_ur)`; pełny scenariusz dla wieku 18–59 lat, równo 60 lat = tylko `K60` |
+| `w_m`  | Wiek w miesiącach           | 216 – 719 | wyliczany z **roku i miesiąca urodzenia**: `w_m = (rok_dziś − rok_ur) × 12 + (mies_dziś − mies_ur)`; zakres 18 lat – 59 lat i 11 mies. (górna granica to miesiąc przed 60. urodzinami, więc faza oszczędzania ma zawsze ≥ 1 miesiąc) |
 | `P`    | Pensja miesięczna **netto** | > 0       | „na rękę"; patrz decyzja D1                                                                                                                                           |
 
 ## 3. Założenia edytowalne (proponujemy domyślne wartości, użytkownik może zmienić)
@@ -98,8 +97,8 @@ K60 = E × 60                                                  dla q_w = 0
 Liczona w pełnych miesiącach na podstawie roku i miesiąca urodzenia:
 
 ```
-w_m = (rok_dziś − rok_ur) × 12 + (mies_dziś − mies_ur)    # wiek w miesiącach
-n   = max(0, 60 × 12 − w_m)                                # miesięczne wpłaty do 60. urodzin
+w_m = (rok_dziś − rok_ur) × 12 + (mies_dziś − mies_ur)    # wiek w miesiącach (≤ 719)
+n   = 60 × 12 − w_m                                        # miesięczne wpłaty do 60. urodzin (≥ 1)
 ```
 
 ### Krok 4. Miesięczna wpłata na IKE — **wynik główny nr 2**
@@ -125,7 +124,7 @@ wynik_kobiety     = 0 zł                     # zawsze; sedno przekazu aplikacji
 
 ```mermaid
 flowchart TD
-    A[Wejście: rok i miesiąc urodzenia, pensja P] --> B[Przycięcie do zakresów<br/>wiek 18–60 lat, P > 0]
+    A[Wejście: rok i miesiąc urodzenia, pensja P] --> B[Przycięcie do zakresów<br/>wiek 18–59 lat, P > 0]
     B --> C[Założenia: sz, r_a, r_w, i<br/>domyślne lub zmienione]
     C --> D[Krok 0: stopy realne miesięczne q_a, q_w]
     D --> E[Krok 1: E = sz × P]
@@ -143,12 +142,11 @@ flowchart TD
 
 | Warunek                       | Zachowanie                                                                                                                                             |
 | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `n = 0` (wiek ≥ 60 lat)       | brak fazy oszczędzania — pokazujemy tylko `K60` („tyle musiałbyś mieć dziś")                                                                           |
-| `0 < n < 60`                  | ostrzeżenie: do 60. urodzin mniej niż 5 lat wpłat — ryzyko niespełnienia warunku zwolnienia podatkowego IKE                                            |
+| `n < 60`                      | ostrzeżenie: do 60. urodzin mniej niż 5 lat wpłat — ryzyko niespełnienia warunku zwolnienia podatkowego IKE                                            |
 | `S × 12 > LIMIT_IKE_ROCZNY`   | ostrzeżenie + informacja, że nadwyżkę trzeba odkładać poza IKE (np. IKZE, konto maklerskie); wzmacnia przekaz o skali problemu                         |
 | `q_a = 0` lub `q_w = 0`       | wzory graniczne z kroków 2 i 4 (bez dzielenia przez zero)                                                                                              |
 | `r < i` (realna stopa ujemna) | wzory działają dla `q < 0` — wynik poprawnie rośnie                                                                                                    |
-| wejście poza zakresem         | wartość przycinana do najbliższej granicy zakresu (bez komunikatów błędów); zakresy suwaków: stopy 0–15%, inflacja 0–10%, `sz` 20–100%; wiek 18–60 lat |
+| wejście poza zakresem         | wartość przycinana do najbliższej granicy zakresu (bez komunikatów błędów); zakresy suwaków: stopy 0–15%, inflacja 0–10%, `sz` 20–100%; wiek 18 lat – 59 lat i 11 mies. |
 
 ## 9. Przykład liczbowy (założenia domyślne, pensja 8 000 zł netto → E = 4 000 zł)
 

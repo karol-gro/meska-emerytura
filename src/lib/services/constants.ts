@@ -15,10 +15,12 @@ export interface Range {
 	max: number;
 }
 
-/** Wiek użytkownika: 18–59 to pełny scenariusz; równo 60 pokazuje sam wymagany kapitał */
+/** Wiek użytkownika: 18 lat – 59 lat i 11 mies. `AGE_RANGE.max` (= 60) wyznacza granicę roku
+ *  urodzenia; górny limit w miesiącach to miesiąc przed 60. urodzinami, więc faza oszczędzania
+ *  ma zawsze co najmniej 1 miesiąc (nie ma przypadku „równo 60 lat / brak fazy oszczędzania"). */
 export const AGE_RANGE: Range = { min: 18, max: RETIREMENT_AGE_F };
 export const MIN_AGE_MONTHS = AGE_RANGE.min * 12;
-export const MAX_AGE_MONTHS = AGE_RANGE.max * 12;
+export const MAX_AGE_MONTHS = AGE_RANGE.max * 12 - 1;
 
 export const INPUT_RANGES: Record<
 	Exclude<keyof CalculatorInputs, 'birthYear' | 'birthMonth'>,
