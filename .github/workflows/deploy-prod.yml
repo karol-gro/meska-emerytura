@@ -34,6 +34,7 @@ jobs:
             pnpm install --frozen-lockfile
             pnpm test
             pnpm check
+            pnpm lint
             pnpm build
             pnpm wrangler deploy
           env: |

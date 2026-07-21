@@ -49,34 +49,20 @@ Dla kobiety w identycznej sytuacji wynik wynosi **0 zł** — i to zestawienie j
 
 ### D1. Kwoty netto, model realny (w dzisiejszych złotówkach)
 
-**Problem:** jak potraktować inflację, wzrost pensji i podatki, żeby wynik był zrozumiały?
-
-Rozważane opcje:
-
-1. **Model nominalny** — projekcja inflacji, wzrostu pensji i nominalnych kwot na 30+ lat.
-   Wyniki „wyglądają groźnie" (duże liczby), ale są nieintuicyjne i wymagają dodatkowych założeń.
-2. **Model realny (rekomendowany)** — wszystkie kwoty w dzisiejszych złotówkach; nominalne
-   stopy zwrotu przeliczamy na realne wzorem Fishera. Zakładamy, że pensja i miesięczna wpłata
-   rosną z inflacją (czyli realnie są stałe).
-3. Model hybrydowy — wyniki realne + przełącznik „pokaż nominalnie". Możliwe rozszerzenie v2.
-
-**Rekomendacja: opcja 2.** Wynik „378 zł miesięcznie w dzisiejszych pieniądzach" jest natychmiast
-porównywalny z pensją użytkownika. Kompromis: kwota wpłaty w aplikacji jest realna — użytkownik
-musi ją co roku indeksować o inflację (komunikujemy to w UI).
+Wszystkie kwoty wyrażamy **w dzisiejszych złotówkach**; nominalne stopy zwrotu przeliczamy na
+realne wzorem Fishera. Zakładamy, że pensja i miesięczna wpłata rosną z inflacją (czyli realnie
+są stałe). Wynik „378 zł miesięcznie w dzisiejszych pieniądzach" jest natychmiast porównywalny
+z pensją użytkownika. Kompromis: kwota wpłaty w aplikacji jest realna — użytkownik musi ją co
+roku indeksować o inflację (komunikujemy to w UI).
 
 Konsekwentnie operujemy na kwotach **netto**: wypłata z IKE po 60. r.ż. jest nieopodatkowana,
 więc porównanie „pensja netto ↔ wypłata z IKE" jest spójne bez modelowania podatków.
 
 ### D2. Docelowa emerytura jako stopa zastąpienia × pensja
 
-**Problem:** skąd wziąć kwotę docelowej emerytury?
-
-1. **Stopa zastąpienia × pensja netto (rekomendowane)** — jeden suwak, spójne z wejściem `P`,
-   odpowiada temu, jak faktycznie działa system emerytalny (emerytura to ułamek pensji).
-2. Kwota podana wprost przez użytkownika — mniej „opowiada historię", ale prostsze pojęciowo.
-   Możliwe jako alternatywny tryb w UI (pole `E` edytowalne bezpośrednio).
-3. Prognoza emerytury z ZUS (kalkulator NDC) — najdokładniejsze, ale wymaga historii składek;
-   zdecydowanie poza zakresem v1.
+Docelową emeryturę liczymy jako **stopa zastąpienia × pensja netto** — jeden suwak, spójny
+z wejściem `P`, odpowiadający temu, jak faktycznie działa system emerytalny (emerytura to
+ułamek pensji).
 
 ## 6. Algorytm — krok po kroku
 
@@ -164,20 +150,6 @@ flowchart TD
 | `r < i` (realna stopa ujemna) | wzory działają dla `q < 0` — wynik poprawnie rośnie                                                                                                    |
 | wejście poza zakresem         | wartość przycinana do najbliższej granicy zakresu (bez komunikatów błędów); zakresy suwaków: stopy 0–15%, inflacja 0–10%, `sz` 20–100%; wiek 18–60 lat |
 
-## 9. Świadome uproszczenia (kandydaci na v2)
+## 9. Przykład liczbowy (założenia domyślne, pensja 8 000 zł netto → E = 4 000 zł)
 
-1. **Wpływ wcześniejszego zakończenia pracy na emeryturę z ZUS** — mężczyzna kończący pracę
-   w wieku 60 lat przez 5 lat nie odprowadza składek, więc jego emerytura z ZUS od 65. r.ż.
-   będzie niższa, niż gdyby pracował do 65. Pełny model musiałby doliczyć kapitał na
-   dożywotnie uzupełnianie tej różnicy. v1 świadomie to pomija — obecny wynik jest więc
-   **dolnym oszacowaniem** kosztu nierówności (co warto komunikować w UI).
-2. **Realny wzrost pensji** — zakładamy pensję stałą realnie; historycznie płace w Polsce
-   rosły szybciej niż inflacja. Rozszerzenie: parametr realnego wzrostu pensji + wpłata
-   rosnąca proporcjonalnie.
-3. **Sekwencja stóp zwrotu i ryzyko** — pojedyncza średnia stopa zamiast symulacji
-   (np. Monte Carlo); brak stopniowej zmiany alokacji przed 60. r.ż. (glide path).
-4. **Limit IKE w czasie** — limit rośnie co roku z płacami; v1 porównuje z bieżącym limitem.
-
-## 10. Przykład liczbowy (założenia domyślne, pensja 8 000 zł netto → E = 4 000 zł)
-
-Można znaleźć w PRZYKLAD-IKE.md
+Można znaleźć w [IKE-PRZYKLAD.md](IKE-PRZYKLAD.md).

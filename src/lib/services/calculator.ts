@@ -65,7 +65,7 @@ export function validate(inputs: CalculatorInputs, now: YearMonth): ValidationEr
 }
 
 /**
- * Algorytm z ALGORYTM-IKE.md §6. Zakłada wejścia zwalidowane przez `validate()`.
+ * Algorytm z docs/IKE-ALGORYTM.md §6. Zakłada wejścia zwalidowane przez `validate()`.
  * `now` jako parametr – deterministyczne testy i spójny wiek w całej aplikacji.
  */
 export function calculate(inputs: CalculatorInputs, now: YearMonth): CalculationResult {

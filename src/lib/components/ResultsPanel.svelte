@@ -63,7 +63,7 @@
 <!-- Karta „luki" – akcent Crimson Warning (DESIGN.md: wizualna manifestacja nierówności) -->
 <Card.Root class="border-t-2 border-t-destructive">
 	<Card.Content class="flex flex-wrap items-baseline justify-between gap-4">
-		<p class="label-caps text-muted-foreground">Kobieta w identycznej sytuacji dokłada</p>
+		<p class="label-caps text-muted-foreground">Kobieta w identycznej sytuacji odkłada</p>
 		<p class="data-display text-4xl text-destructive">0 zł</p>
 	</Card.Content>
 </Card.Root>
