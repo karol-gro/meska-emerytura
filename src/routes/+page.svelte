@@ -77,7 +77,7 @@
 			<WarningsList warnings={calc.result.warnings} />
 			<ResultsPanel result={calc.result} />
 			<div class="flex justify-end">
-				<ShareButton url={calc.shareUrl} />
+				<ShareButton url={calc.shareUrl} monthlyContribution={calc.result.monthlyContribution} />
 			</div>
 		</section>
 	{:else}
