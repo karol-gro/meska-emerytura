@@ -9,7 +9,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { CalculatorState } from '$lib/state/calculator.svelte';
 	import unequalIcon from '$lib/assets/unequal.svg';
-	import { IconCode } from '@tabler/icons-svelte';
+	import { IconCode, IconMail } from '@tabler/icons-svelte';
 
 	const today = new Date();
 	const calc = new CalculatorState(
@@ -121,6 +121,19 @@
 				> o tym, jak te kwoty są wyliczane.
 			</p>
 			<p>Nie przechowujemy żadnych wprowadzonych tu danych po naszej stronie.</p>
+			<p>
+				Kontakt: <a
+					href="mailto:kontakt@meskaemerytura.pl"
+					class="underline underline-offset-2 hover:text-foreground"
+				>
+					<IconMail
+						size={14}
+						stroke={2}
+						aria-hidden="true"
+						class="mr-1 inline-block align-text-bottom"
+					/>kontakt@meskaemerytura.pl</a
+				>
+			</p>
 		</div>
 
 		<!-- Znak GitHuba pozostaje monochromatyczny – wytyczne marki GitHub nie pozwalają go przebarwiać -->
