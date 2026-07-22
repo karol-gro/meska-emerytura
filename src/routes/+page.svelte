@@ -11,12 +11,6 @@
 	import unequalIcon from '$lib/assets/unequal.svg';
 	import { IconCode } from '@tabler/icons-svelte';
 
-	const siteUrl = 'https://meskaemerytura.pl/';
-	const pageTitle = 'Męska emerytura – kalkulator nierówności emerytalnych';
-	const pageDescription =
-		'Ile mężczyzna musi odkładać na IKE, żeby przejść na emeryturę w wieku 60 lat – tak jak kobieta.';
-	const ogImageUrl = 'https://meskaemerytura.pl/og-image.png';
-
 	const today = new Date();
 	const calc = new CalculatorState(
 		{ year: today.getFullYear(), month: today.getMonth() + 1 },
@@ -49,27 +43,6 @@
 		}
 	});
 </script>
-
-<svelte:head>
-	<title>{pageTitle}</title>
-	<meta name="description" content={pageDescription} />
-	<link rel="canonical" href={siteUrl} />
-
-	<meta property="og:type" content="website" />
-	<meta property="og:site_name" content="Męska emerytura" />
-	<meta property="og:locale" content="pl_PL" />
-	<meta property="og:url" content={siteUrl} />
-	<meta property="og:title" content={pageTitle} />
-	<meta property="og:description" content={pageDescription} />
-	<meta property="og:image" content={ogImageUrl} />
-	<meta property="og:image:width" content="1200" />
-	<meta property="og:image:height" content="630" />
-
-	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:title" content={pageTitle} />
-	<meta name="twitter:description" content={pageDescription} />
-	<meta name="twitter:image" content={ogImageUrl} />
-</svelte:head>
 
 <main class="mx-auto grid max-w-3xl gap-8 p-4 py-10 sm:p-8 sm:py-16">
 	<header class="grid gap-3">
