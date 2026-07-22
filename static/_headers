@@ -14,3 +14,8 @@
   Cache-Control: public, max-age=30, must-revalidate
 /index.html
   Cache-Control: public, max-age=30, must-revalidate
+
+# Obrazek og:image – bez hasha w nazwie, więc krótszy cache niż /_app/immutable/*,
+# żeby podmiana pliku (bez zmiany nazwy) doszła do crawlerów w rozsądnym czasie.
+/og-image.png
+  Cache-Control: public, max-age=86400

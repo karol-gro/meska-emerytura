@@ -40,6 +40,8 @@ pnpm build
 wrangler deploy
 ```
 
+Produkcyjny adres: [meskaemerytura.pl](https://meskaemerytura.pl)
+
 ## Struktura
 
 ```
