@@ -1,18 +1,33 @@
 import type { CalculatorInputs, YearMonth } from '$lib/models/inputs';
 import { validate } from './calculator';
+import { DEFAULT_ASSUMPTIONS } from './constants';
 
 /**
  * Kompaktowy, wersjonowany zapis wejść do query param (`?s=...`).
- * Format v1: `1_<rokUr>_<miesiącUr>_<pensja>_<sz%>_<ra%>_<rw%>_<i%>`
- * np. `1_1996_6_8000_50_6_3.5_2.5`. Stopy zapisujemy w procentach (czytelniejsze
+ * Format v2: `2_<rokUr>_<miesiącUr>_<pensja>_<sz%>_<ra%>_<rw%>_<i%>_<walS%>_<walE%>_<skr%>`
+ * np. `2_1996_6_8000_50_6_3.5_2.5_4.5_4_13`. Stopy zapisujemy w procentach (czytelniejsze
  * i krótsze niż ułamki), separator `_` nie koliduje z kropką dziesiętną.
+ *
+ * Format v1 (`1_...` bez trzech ostatnich pól) dekodujemy nadal – brakujące założenia
+ * uzupełniamy domyślnymi, żeby stare linki działały.
  */
-const VERSION = '1';
+const VERSION = '2';
 const SEPARATOR = '_';
 export const QUERY_PARAM = 's';
 
 /** Kolejność pól procentowych w zakodowanym stringu (po dacie urodzenia i pensji) */
-const PERCENT_FIELDS = ['replacementRate', 'returnAccum', 'returnPayout', 'inflation'] as const;
+const PERCENT_FIELDS = [
+	'replacementRate',
+	'returnAccum',
+	'returnPayout',
+	'inflation',
+	'contributionValorization',
+	'pensionValorization',
+	'lifeExpectancyReduction'
+] as const;
+
+/** Pola procentowe formatu v1 (bez trzech nowych założeń) – dla wstecznej zgodności linków */
+const PERCENT_FIELDS_V1 = ['replacementRate', 'returnAccum', 'returnPayout', 'inflation'] as const;
 
 const NUMBER_PATTERN = /^-?\d+(\.\d+)?$/;
 
@@ -42,20 +57,23 @@ export function encode(inputs: CalculatorInputs): string {
  */
 export function decode(encoded: string, now: YearMonth): CalculatorInputs | null {
 	const parts = encoded.split(SEPARATOR);
-	if (parts.length !== 4 + PERCENT_FIELDS.length || parts[0] !== VERSION) return null;
+	const version = parts[0];
+	const fields = version === VERSION ? PERCENT_FIELDS : version === '1' ? PERCENT_FIELDS_V1 : null;
+	if (fields === null || parts.length !== 4 + fields.length) return null;
 	if (parts.slice(1).some((part) => !NUMBER_PATTERN.test(part))) return null;
 
 	const [birthYear, birthMonth, netSalary, ...percents] = parts.slice(1).map(Number);
 
+	// Domyślne założenia jako baza – w v1 uzupełniają trzy pola nieobecne w linku.
 	const inputs: CalculatorInputs = {
 		birthYear,
 		birthMonth,
 		netSalary,
-		replacementRate: fromPercent(percents[0]),
-		returnAccum: fromPercent(percents[1]),
-		returnPayout: fromPercent(percents[2]),
-		inflation: fromPercent(percents[3])
+		...DEFAULT_ASSUMPTIONS
 	};
+	fields.forEach((field, index) => {
+		inputs[field] = fromPercent(percents[index]);
+	});
 
 	return validate(inputs, now).length === 0 ? inputs : null;
 }

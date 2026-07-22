@@ -23,4 +23,10 @@ export interface CalculatorInputs {
 	returnPayout: number;
 	/** i – roczna inflacja */
 	inflation: number;
+	/** wal_s – nominalna roczna waloryzacja składek (obniża emeryturę kobiety w wieku 60) */
+	contributionValorization: number;
+	/** wal_e – nominalna roczna waloryzacja emerytur (waloryzuje świadczenie kobiety w latach 60–65) */
+	pensionValorization: number;
+	/** skr – obniżka świadczenia z tytułu dłuższego dożycia w wieku 60 vs 65 (ułamek) */
+	lifeExpectancyReduction: number;
 }

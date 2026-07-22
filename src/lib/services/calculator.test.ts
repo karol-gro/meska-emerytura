@@ -62,20 +62,26 @@ describe('wiek w pełnych miesiącach', () => {
 	});
 });
 
-describe('przykład liczbowy z §10 (pensja 8000 zł, założenia domyślne)', () => {
-	it('K60 ≈ 234 400 zł – mniej niż naiwne 60 × 4000', () => {
+describe('przykład liczbowy z §9 (pensja 8000 zł, założenia domyślne)', () => {
+	it('E = 4000, ale świadczenie do zastąpienia E_avg ≈ 3253 zł (emerytura kobiety)', () => {
 		const result = calculate(inputsForAge(30), NOW);
 		expect(result.targetPension).toBe(4000);
-		expect(result.requiredCapital).toBeCloseTo(234_400, -3); // tolerancja ±500
-		expect(result.requiredCapital).toBeLessThan(240_000);
+		expect(result.replacementBenefit).toBeCloseTo(3253, 0); // tolerancja ±0,5 zł
+		expect(result.replacementBenefit).toBeLessThan(result.targetPension);
+	});
+
+	it('K60 ≈ 190 600 zł – mniej niż naiwne 60 × E_avg', () => {
+		const result = calculate(inputsForAge(30), NOW);
+		expect(result.requiredCapital).toBeCloseTo(190_600, -3); // tolerancja ±500
+		expect(result.requiredCapital).toBeLessThan(result.replacementBenefit * 60);
 	});
 
 	const table: { age: number; months: number; monthly: number; ikeExceeded: boolean }[] = [
-		{ age: 25, months: 420, monthly: 293, ikeExceeded: false },
-		{ age: 30, months: 360, monthly: 378, ikeExceeded: false },
-		{ age: 40, months: 240, monthly: 686, ikeExceeded: false },
-		{ age: 50, months: 120, monthly: 1646, ikeExceeded: false },
-		{ age: 55, months: 60, monthly: 3592, ikeExceeded: true }
+		{ age: 25, months: 420, monthly: 239, ikeExceeded: false },
+		{ age: 30, months: 360, monthly: 307, ikeExceeded: false },
+		{ age: 40, months: 240, monthly: 558, ikeExceeded: false },
+		{ age: 50, months: 120, monthly: 1339, ikeExceeded: false },
+		{ age: 55, months: 60, monthly: 2922, ikeExceeded: true }
 	];
 
 	it.each(table)('wiek $age → S ≈ $monthly zł/mies.', ({ age, months, monthly, ikeExceeded }) => {
@@ -96,8 +102,9 @@ describe('przypadki brzegowe (§8)', () => {
 			inputsForAge(30, { returnAccum: 0.025, returnPayout: 0.025, inflation: 0.025 }),
 			NOW
 		);
-		expect(result.requiredCapital).toBeCloseTo(4000 * 60, 6);
-		expect(result.monthlyContribution).toBeCloseTo((4000 * 60) / 360, 6);
+		// przy q_w = 0 kapitał to dokładnie 60 wypłat świadczenia do zastąpienia (E_avg)
+		expect(result.requiredCapital).toBeCloseTo(result.replacementBenefit * 60, 6);
+		expect(result.monthlyContribution).toBeCloseTo((result.replacementBenefit * 60) / 360, 6);
 	});
 
 	it('realna stopa ujemna → wynik poprawnie rośnie względem stopy zerowej', () => {
@@ -105,8 +112,17 @@ describe('przypadki brzegowe (§8)', () => {
 			inputsForAge(30, { returnAccum: 0.01, returnPayout: 0.01, inflation: 0.025 }),
 			NOW
 		);
-		expect(negative.requiredCapital).toBeGreaterThan(4000 * 60);
+		expect(negative.requiredCapital).toBeGreaterThan(negative.replacementBenefit * 60);
 		expect(negative.monthlyContribution).toBeGreaterThan(negative.requiredCapital / 360);
+	});
+
+	it('waloryzacja emerytur = inflacja → E_avg = emerytura startowa kobiety (wal_e_real = 0)', () => {
+		// wal_e równa inflacji ⇒ realna waloryzacja 0 ⇒ świadczenie stałe przez 5 lat (bez uśredniania w górę)
+		const flat = calculate(inputsForAge(30, { pensionValorization: 0.025, inflation: 0.025 }), NOW);
+		const start =
+			(flat.targetPension / Math.pow(1.045 / 1.025, 5)) *
+			(1 - DEFAULT_ASSUMPTIONS.lifeExpectancyReduction);
+		expect(flat.replacementBenefit).toBeCloseTo(start, 6);
 	});
 
 	it('mniej niż 60 miesięcy oszczędzania → ostrzeżenie o 5 latach wpłat', () => {

@@ -77,6 +77,32 @@
 					max={INPUT_RANGES.inflation.max}
 					onchange={(v) => (calc.inputs.inflation = v)}
 				/>
+				<AssumptionSlider
+					label="Waloryzacja składek"
+					description="Nominalna, rocznie; brak 5 waloryzacji obniża emeryturę kobiety. Nie mniej niż inflacja."
+					value={calc.inputs.contributionValorization}
+					min={Math.max(INPUT_RANGES.contributionValorization.min, calc.sanitized.inflation)}
+					max={INPUT_RANGES.contributionValorization.max}
+					onchange={(v) => (calc.inputs.contributionValorization = v)}
+				/>
+				<AssumptionSlider
+					label="Waloryzacja emerytur"
+					description="Nominalna, rocznie; podnosi średnie świadczenie kobiety w latach 60–65. Nie mniej niż inflacja."
+					value={calc.inputs.pensionValorization}
+					min={Math.max(INPUT_RANGES.pensionValorization.min, calc.sanitized.inflation)}
+					max={INPUT_RANGES.pensionValorization.max}
+					onchange={(v) => (calc.inputs.pensionValorization = v)}
+				/>
+				<AssumptionSlider
+					label="Obniżka z tytułu dłuższego dożycia"
+					description="O ile niższa jest emerytura w wieku 60 vs 65 (dłuższe dalsze trwanie życia)"
+					value={calc.inputs.lifeExpectancyReduction}
+					min={INPUT_RANGES.lifeExpectancyReduction.min}
+					max={INPUT_RANGES.lifeExpectancyReduction.max}
+					step={1}
+					digits={0}
+					onchange={(v) => (calc.inputs.lifeExpectancyReduction = v)}
+				/>
 			</Card.Content>
 		</div>
 	{/if}

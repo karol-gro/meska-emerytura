@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import type { CalculatorInputs, YearMonth } from '$lib/models/inputs';
 import { decode, encode } from './codec';
-import { defaultInputs } from './constants';
+import { DEFAULT_ASSUMPTIONS, defaultInputs } from './constants';
 
 const NOW: YearMonth = { year: 2026, month: 6 };
 
 describe('encode', () => {
-	it('produkuje kompaktowy, czytelny format v1', () => {
+	it('produkuje kompaktowy, czytelny format v2', () => {
 		const inputs: CalculatorInputs = {
 			birthYear: 1996,
 			birthMonth: 9,
@@ -14,9 +14,12 @@ describe('encode', () => {
 			replacementRate: 0.5,
 			returnAccum: 0.06,
 			returnPayout: 0.035,
-			inflation: 0.025
+			inflation: 0.025,
+			contributionValorization: 0.045,
+			pensionValorization: 0.04,
+			lifeExpectancyReduction: 0.13
 		};
-		expect(encode(inputs)).toBe('1_1996_9_8000_50_6_3.5_2.5');
+		expect(encode(inputs)).toBe('2_1996_9_8000_50_6_3.5_2.5_4.5_4_13');
 	});
 
 	it('nie zostawia artefaktów zmiennoprzecinkowych w procentach', () => {
@@ -36,7 +39,10 @@ describe('round-trip', () => {
 				replacementRate: 0.75,
 				returnAccum: 0.081,
 				returnPayout: 0.0425,
-				inflation: 0
+				inflation: 0,
+				contributionValorization: 0.05,
+				pensionValorization: 0.0425,
+				lifeExpectancyReduction: 0.1
 			},
 			{
 				birthYear: 2008,
@@ -45,7 +51,10 @@ describe('round-trip', () => {
 				replacementRate: 0.2,
 				returnAccum: 0,
 				returnPayout: 0.15,
-				inflation: 0.1
+				inflation: 0.1,
+				contributionValorization: 0.15,
+				pensionValorization: 0,
+				lifeExpectancyReduction: 0.3
 			}
 		];
 		for (const inputs of cases) {
@@ -68,14 +77,29 @@ describe('decode – odporność na błędne wejście', () => {
 			'1_2_3',
 			'1_a_b_c_d_e_f_g',
 			'null',
-			'1_1996_9_8000_50_6_3.5' // za mało pól
+			'2_1996_9_8000_50_6_3.5_2.5', // v2 – za mało pól (brak 3 nowych)
+			'1_1996_9_8000_50_6_3.5' // v1 – za mało pól
 		]) {
 			expect(decode(junk, NOW)).toBeNull();
 		}
 	});
 
 	it('zwraca null dla nieznanej wersji', () => {
-		expect(decode(valid.replace(/^1_/, '2_'), NOW)).toBeNull();
+		expect(decode(valid.replace(/^2_/, '3_'), NOW)).toBeNull();
+	});
+
+	it('dekoduje stary link v1 – brakujące założenia uzupełnia domyślnymi', () => {
+		const decoded = decode('1_1996_9_8000_50_6_3.5_2.5', NOW);
+		expect(decoded).not.toBeNull();
+		expect(decoded).toMatchObject({
+			birthYear: 1996,
+			birthMonth: 9,
+			netSalary: 8000,
+			replacementRate: 0.5,
+			contributionValorization: DEFAULT_ASSUMPTIONS.contributionValorization,
+			pensionValorization: DEFAULT_ASSUMPTIONS.pensionValorization,
+			lifeExpectancyReduction: DEFAULT_ASSUMPTIONS.lifeExpectancyReduction
+		});
 	});
 
 	it('zwraca null dla wartości poza zakresem', () => {

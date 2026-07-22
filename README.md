@@ -1,6 +1,6 @@
 # Męska emerytura
 
-Kalkulator pokazujący koszt nierównego wieku emerytalnego w Polsce (kobiety 60 lat, mężczyźni 65). Liczy, **ile mężczyzna musi mieć na IKE w dniu 60. urodzin** i **ile musi w tym celu odkładać co miesiąc**, żeby sfinansować 5-letnią lukę, zanim ZUS zacznie płacić.
+Kalkulator pokazujący koszt nierównego wieku emerytalnego w Polsce (kobiety 60 lat, mężczyźni 65). Liczy, **ile mężczyzna musi mieć na IKE w dniu 60. urodzin** i **ile musi w tym celu odkładać co miesiąc**, żeby sfinansować 5-letnią lukę, zanim ZUS zacznie płacić. Punktem odniesienia jest **świadczenie, jakie w tych latach faktycznie dostaje kobieta** przechodząca na emeryturę w wieku 60 (niższe niż emerytura mężczyzny w wieku 65 – mniej waloryzacji składek i dłuższe dożycie, ale waloryzowane przez te 5 lat).
 
 Pełna specyfikacja algorytmu (wzory, decyzje projektowe, walidacje, przykład liczbowy): [docs/IKE-ALGORYTM.md](docs/IKE-ALGORYTM.md).
 

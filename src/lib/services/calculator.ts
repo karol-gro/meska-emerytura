@@ -3,6 +3,7 @@ import type { CalculationResult, CalculatorWarning, ValidationError } from '$lib
 import {
 	ageInMonths,
 	GAP_MONTHS,
+	GAP_YEARS,
 	IKE_ANNUAL_LIMIT,
 	INPUT_RANGES,
 	MAX_AGE_MONTHS,
@@ -14,10 +15,24 @@ import {
 /** Poniżej tej wartości traktujemy stopę jako zerową (wzory graniczne zamiast dzielenia przez ~0) */
 const RATE_EPSILON = 1e-9;
 
-/** Krok 0: nominalna roczna stopa → realna miesięczna (wzór Fishera + pierwiastek 12. stopnia) */
+/** Krok 0: nominalna roczna stopa → realna roczna (wzór Fishera) */
+export function realAnnualRate(nominalAnnual: number, inflation: number): number {
+	return (1 + nominalAnnual) / (1 + inflation) - 1;
+}
+
+/** Krok 0: nominalna roczna stopa → realna miesięczna (Fisher + pierwiastek 12. stopnia) */
 export function monthlyRealRate(nominalAnnual: number, inflation: number): number {
-	const realAnnual = (1 + nominalAnnual) / (1 + inflation) - 1;
-	return Math.pow(1 + realAnnual, 1 / 12) - 1;
+	return Math.pow(1 + realAnnualRate(nominalAnnual, inflation), 1 / 12) - 1;
+}
+
+/**
+ * Krok 1c: średnia z `years` rocznych poziomów świadczenia startowego `start`, rosnących
+ * co rok o realną stopę `rate` (waloryzacja emerytur). `rate = 0` → wszystkie poziomy równe `start`.
+ */
+export function averagedBenefit(start: number, rate: number, years: number): number {
+	if (Math.abs(rate) < RATE_EPSILON) return start;
+	const sumOfFactors = (Math.pow(1 + rate, years) - 1) / rate; // Σ dla k = 0..years-1
+	return (start * sumOfFactors) / years;
 }
 
 /**
@@ -74,10 +89,18 @@ export function calculate(inputs: CalculatorInputs, now: YearMonth): Calculation
 	const qAccum = monthlyRealRate(inputs.returnAccum, inputs.inflation);
 	const qPayout = monthlyRealRate(inputs.returnPayout, inputs.inflation);
 
-	// Krok 1: docelowa emerytura
+	// Krok 1: docelowa emerytura mężczyzny (w wieku 65)
 	const targetPension = inputs.replacementRate * inputs.netSalary;
-	// Krok 2: kapitał wymagany w dniu 60. urodzin
-	const requiredCapital = annuityDuePresentValue(targetPension, GAP_MONTHS, qPayout);
+	// Krok 1a: emerytura kobiety w wieku 60 – bez 5 lat waloryzacji składek i z dłuższym dożyciem
+	const contributionValReal = realAnnualRate(inputs.contributionValorization, inputs.inflation);
+	const womanStartPension =
+		(targetPension / Math.pow(1 + contributionValReal, GAP_YEARS)) *
+		(1 - inputs.lifeExpectancyReduction);
+	// Krok 1b–1c: świadczenie kobiety waloryzowane przez 5 lat, uśrednione – to odtwarza mężczyzna
+	const pensionValReal = realAnnualRate(inputs.pensionValorization, inputs.inflation);
+	const replacementBenefit = averagedBenefit(womanStartPension, pensionValReal, GAP_YEARS);
+	// Krok 2: kapitał wymagany w dniu 60. urodzin (renta wypłacająca E_avg)
+	const requiredCapital = annuityDuePresentValue(replacementBenefit, GAP_MONTHS, qPayout);
 	// Krok 3: długość fazy oszczędzania w pełnych miesiącach (wiek ≤ 59 lat 11 mies. ⇒ n ≥ 1)
 	const monthsOfSaving = RETIREMENT_AGE_F * 12 - ageMonths;
 
@@ -95,6 +118,7 @@ export function calculate(inputs: CalculatorInputs, now: YearMonth): Calculation
 		age,
 		ageMonths,
 		targetPension,
+		replacementBenefit,
 		requiredCapital,
 		monthsOfSaving,
 		monthlyContribution,

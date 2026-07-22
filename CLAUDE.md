@@ -47,4 +47,4 @@ Vite binduje się na `0.0.0.0` (konfig `server.host`) — wymagane, żeby port f
 
 ## Testy
 
-Testy kalkulatora weryfikują przykład liczbowy z docs/IKE-ALGORYTM.md §9 (K60 ≈ 234 400 zł, tabela wieków) i przypadki brzegowe z §8. Przy zmianie algorytmu najpierw zaktualizuj specyfikację i wartości oczekiwane w testach. Testy codeca: round-trip + odporność na śmieciowe wejście.
+Testy kalkulatora weryfikują przykład liczbowy z docs/IKE-ALGORYTM.md §9 (świadczenie do zastąpienia E_avg ≈ 3 253 zł, K60 ≈ 190 600 zł, tabela wieków) i przypadki brzegowe z §8. Przy zmianie algorytmu najpierw zaktualizuj specyfikację i wartości oczekiwane w testach. Testy codeca: round-trip + odporność na śmieciowe wejście.

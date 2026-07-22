@@ -12,8 +12,10 @@ export interface CalculationResult {
 	age: number;
 	/** w_m – wiek w pełnych miesiącach; podstawa wszystkich wyliczeń */
 	ageMonths: number;
-	/** E – docelowa miesięczna emerytura */
+	/** E – docelowa miesięczna emerytura mężczyzny (w wieku 65) */
 	targetPension: number;
+	/** E_avg – uśrednione świadczenie kobiety z lat 60–65; to je odtwarza mężczyzna z IKE */
+	replacementBenefit: number;
 	/** K60 – kapitał wymagany w dniu 60. urodzin (wynik główny nr 1) */
 	requiredCapital: number;
 	/** n – liczba miesięcznych wpłat do 60. urodzin */

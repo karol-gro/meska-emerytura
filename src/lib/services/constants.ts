@@ -3,7 +3,8 @@ import type { CalculatorInputs, YearMonth } from '$lib/models/inputs';
 /** Stałe systemowe (§4 specyfikacji) – konfiguracja aplikacji, nie do edycji przez użytkownika */
 export const RETIREMENT_AGE_F = 60;
 export const RETIREMENT_AGE_M = 65;
-export const GAP_MONTHS = (RETIREMENT_AGE_M - RETIREMENT_AGE_F) * 12;
+export const GAP_YEARS = RETIREMENT_AGE_M - RETIREMENT_AGE_F;
+export const GAP_MONTHS = GAP_YEARS * 12;
 /** Roczny limit wpłat na IKE – 3 × prognozowane przeciętne wynagrodzenie (wartość na 2026) */
 export const IKE_ANNUAL_LIMIT = 28_260;
 /** Minimalna liczba lat kalendarzowych wpłat dla zwolnienia podatkowego IKE */
@@ -30,14 +31,21 @@ export const INPUT_RANGES: Record<
 	replacementRate: { min: 0.2, max: 1.0 },
 	returnAccum: { min: 0, max: 0.15 },
 	returnPayout: { min: 0, max: 0.15 },
-	inflation: { min: 0, max: 0.1 }
+	inflation: { min: 0, max: 0.1 },
+	// dolna granica waloryzacji śledzi dynamicznie inflację (clampInputs); statyczne min = 0
+	contributionValorization: { min: 0, max: 0.15 },
+	pensionValorization: { min: 0, max: 0.15 },
+	lifeExpectancyReduction: { min: 0, max: 0.3 }
 };
 
 export const DEFAULT_ASSUMPTIONS = {
 	replacementRate: 0.5,
 	returnAccum: 0.06,
 	returnPayout: 0.035,
-	inflation: 0.025
+	inflation: 0.025,
+	contributionValorization: 0.045,
+	pensionValorization: 0.04,
+	lifeExpectancyReduction: 0.13
 } as const satisfies Partial<CalculatorInputs>;
 
 /** Wiek w pełnych miesiącach */
@@ -82,6 +90,11 @@ export function clampInputs(inputs: CalculatorInputs, now: YearMonth): Calculato
 			? Math.min(range.max, Math.max(range.min, value))
 			: defaults[field];
 	}
+
+	// Gwarancja ustawowa (§8): żadna waloryzacja nie może być niższa od inflacji – podnosimy do niej,
+	// żeby realna waloryzacja była nieujemna. Dynamiczna granica zależna od (przyciętej) inflacji.
+	clamped.contributionValorization = Math.max(clamped.contributionValorization, clamped.inflation);
+	clamped.pensionValorization = Math.max(clamped.pensionValorization, clamped.inflation);
 
 	if (!Number.isInteger(inputs.birthYear) || !Number.isInteger(inputs.birthMonth)) {
 		clamped.birthYear = defaults.birthYear;

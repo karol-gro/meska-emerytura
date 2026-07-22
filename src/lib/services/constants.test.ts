@@ -25,6 +25,15 @@ describe('clampInputs', () => {
 		expect(clamped.inflation).toBe(0);
 	});
 
+	it('waloryzacja poniżej inflacji → podniesiona do inflacji (§8)', () => {
+		const clamped = clampInputs(
+			inputs({ inflation: 0.04, contributionValorization: 0.02, pensionValorization: 0.045 }),
+			NOW
+		);
+		expect(clamped.contributionValorization).toBe(0.04); // podniesiona do inflacji
+		expect(clamped.pensionValorization).toBe(0.045); // już powyżej inflacji – bez zmian
+	});
+
 	it('wartości nieliczbowe wracają do domyślnych', () => {
 		const clamped = clampInputs(inputs({ netSalary: NaN, returnPayout: Infinity }), NOW);
 		expect(clamped.netSalary).toBe(8000);

@@ -55,7 +55,8 @@
 				<p class="label-caps text-muted-foreground">Kapitał na IKE w dniu 60. urodzin</p>
 				<p class="data-display text-2xl">{formatPln(result.requiredCapital)}</p>
 				<p class="text-xs text-muted-foreground">
-					pokrywa 5 lat wypłat po {formatPln(result.targetPension)} miesięcznie
+					pokrywa 5 lat wypłat po {formatPln(result.replacementBenefit)} miesięcznie – tyle średnio dostaje
+					w tym czasie kobieta
 				</p>
 			</div>
 		</div>
