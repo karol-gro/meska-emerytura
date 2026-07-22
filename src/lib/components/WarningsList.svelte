@@ -14,7 +14,7 @@
 		LESS_THAN_5_YEARS: {
 			title: `Mniej niż ${MIN_IKE_CONTRIBUTION_YEARS} lat wpłat do 60. urodzin`,
 			description:
-				'Zwolnienie podatkowe IKE wymaga wpłat w co najmniej 5 latach kalendarzowych. Część środków musisz odłożyć w poza IKE.'
+				'Zwolnienie podatkowe IKE wymaga wpłat w co najmniej 5 latach kalendarzowych. Część środków musisz odłożyć poza IKE.'
 		}
 	};
 </script>

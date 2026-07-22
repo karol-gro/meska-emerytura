@@ -21,7 +21,7 @@
 		<div class="grid gap-1">
 			<Card.Title class="label-caps">Założenia</Card.Title>
 			<Card.Description
-				>Możesz zostawić wartości domyślne albo dopasować do siebie.</Card.Description
+				>Możesz zostawić wartości domyślne albo dopasować je do siebie.</Card.Description
 			>
 		</div>
 		<svg
@@ -79,7 +79,7 @@
 				/>
 				<AssumptionSlider
 					label="Waloryzacja składek"
-					description="Nominalna, rocznie; brak 5 waloryzacji obniża emeryturę kobiety. Nie mniej niż inflacja."
+					description="Nominalna, rocznie. Nie mniej niż inflacja."
 					value={calc.inputs.contributionValorization}
 					min={Math.max(INPUT_RANGES.contributionValorization.min, calc.sanitized.inflation)}
 					max={INPUT_RANGES.contributionValorization.max}
@@ -87,7 +87,7 @@
 				/>
 				<AssumptionSlider
 					label="Waloryzacja emerytur"
-					description="Nominalna, rocznie; podnosi średnie świadczenie kobiety w latach 60–65. Nie mniej niż inflacja."
+					description="Nominalna, rocznie. Nie mniej niż inflacja."
 					value={calc.inputs.pensionValorization}
 					min={Math.max(INPUT_RANGES.pensionValorization.min, calc.sanitized.inflation)}
 					max={INPUT_RANGES.pensionValorization.max}
@@ -95,7 +95,7 @@
 				/>
 				<AssumptionSlider
 					label="Obniżka z tytułu dłuższego dożycia"
-					description="O ile niższa jest emerytura w wieku 60 vs 65 (dłuższe dalsze trwanie życia)"
+					description="O ile niższa jest emerytura w wieku 60 niż 65 lat (dłuższe dalsze trwanie życia)"
 					value={calc.inputs.lifeExpectancyReduction}
 					min={INPUT_RANGES.lifeExpectancyReduction.min}
 					max={INPUT_RANGES.lifeExpectancyReduction.max}

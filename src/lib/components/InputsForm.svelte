@@ -4,6 +4,7 @@
 	import { Label } from '$lib/components/ui/label';
 	import type { CalculatorState } from '$lib/state/calculator.svelte';
 	import { AGE_RANGE, ageInMonths } from '$lib/services/constants';
+	import { yearWord } from '$lib/format';
 
 	let { state }: { state: CalculatorState } = $props();
 
@@ -69,7 +70,7 @@
 				</select>
 			</div>
 			<p class="text-sm text-muted-foreground">
-				Wiek: {age.years} lat{age.months > 0 ? ` i ${age.months} mies.` : ''}
+				Wiek: {age.years} {yearWord(age.years)}{age.months > 0 ? ` i ${age.months} mies.` : ''}
 			</p>
 		</div>
 		<div class="grid gap-2">

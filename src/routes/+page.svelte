@@ -54,7 +54,7 @@
 		</h1>
 		<p class="text-lg text-muted-foreground">
 			Kobiety przechodzą na emeryturę w wieku 60 lat, mężczyźni – 65. Mężczyzna, jeśli chce przestać
-			pracować w wieku 60 lat, musi samemu odłożyć środki.
+			pracować w wieku 60 lat, musi sam odłożyć środki.
 		</p>
 		<p class="text-lg text-muted-foreground">
 			Policz, ile musisz odkładać, aby sfinansować emeryturę w wieku 60 lat.
@@ -112,7 +112,7 @@
 				najbliższe 30 lat.
 			</p>
 			<p>
-				Wyliczona wpłata jest w dzisiejszych pieniądzach, co roku podnoś ją o inflację. Przeczytaj
+				Wyliczona wpłata jest w dzisiejszych pieniądzach. Co roku podnoś ją o inflację. Przeczytaj
 				<a
 					href="https://github.com/karol-gro/meska-emerytura/blob/main/docs/IKE-ALGORYTM.md"
 					target="_blank"
@@ -120,7 +120,7 @@
 					class="underline underline-offset-2 hover:text-foreground">tutaj</a
 				> o tym, jak te kwoty są wyliczane.
 			</p>
-			<p>Nie przechowujemy żadnych wprowadzonych tu danych po naszej stronie.</p>
+			<p>Nie przechowujemy po naszej stronie żadnych wprowadzonych tu danych.</p>
 			<p>
 				Kontakt: <a
 					href="mailto:kontakt@meskaemerytura.pl"
