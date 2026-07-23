@@ -15,7 +15,8 @@
       "Bash(node scripts/check-dashes.js --fix)",
       "Bash(node scripts/check-dashes.js)",
       "Bash(pnpm lint:dashes)",
-      "Bash(pnpm test:unit -- --run *)"
+      "Bash(pnpm test:unit -- --run *)",
+      "WebSearch"
     ]
   }
 }

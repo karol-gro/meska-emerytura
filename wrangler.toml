@@ -5,3 +5,6 @@ preview_urls = true
 
 [assets]
 directory = "./build"
+# Fallback SPA: request nietrafiający w plik dostaje ./build/index.html (200),
+# żeby client-side routing SvelteKita obsługiwał deep-linki i odświeżanie podstron.
+not_found_handling = "single-page-application"
