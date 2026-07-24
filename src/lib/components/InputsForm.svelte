@@ -70,7 +70,8 @@
 				</select>
 			</div>
 			<p class="text-sm text-muted-foreground">
-				Wiek: {age.years} {yearWord(age.years)}{age.months > 0 ? ` i ${age.months} mies.` : ''}
+				Wiek: {age.years}
+				{yearWord(age.years)}{age.months > 0 ? ` i ${age.months} mies.` : ''}
 			</p>
 		</div>
 		<div class="grid gap-2">

@@ -1,18 +1,14 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
 	import { IconShare, IconLink, IconCheck } from '@tabler/icons-svelte';
-	import { formatPln } from '$lib/format';
 
-	let { url, monthlyContribution }: { url: string; monthlyContribution: number } = $props();
+	// shareText podaje strona – każdy kalkulator ma własny komunikat
+	let { url, shareText }: { url: string; shareText: string } = $props();
 
 	let copied = $state(false);
 
 	// Web Share API bywa niedostępne (np. Firefox na desktopie) – wtedy przycisk chowamy
 	const canShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function';
-
-	const shareText = $derived(
-		`Mój „podatek od płci" to ${formatPln(monthlyContribution)} miesięcznie – tyle muszę odkładać, żeby przejść na emeryturę tak wcześnie jak kobiety. A Twój?`
-	);
 
 	async function copy() {
 		await navigator.clipboard.writeText(url);

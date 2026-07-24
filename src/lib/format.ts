@@ -4,8 +4,15 @@ const pln = new Intl.NumberFormat('pl-PL', {
 	maximumFractionDigits: 0
 });
 
-export function formatPln(value: number): string {
-	return pln.format(value);
+/** Kwota w zł. `digits` > 0 pokazuje grosze (np. netto w kalkulatorze PIT-0). */
+export function formatPln(value: number, digits = 0): string {
+	if (digits === 0) return pln.format(value);
+	return new Intl.NumberFormat('pl-PL', {
+		style: 'currency',
+		currency: 'PLN',
+		minimumFractionDigits: digits,
+		maximumFractionDigits: digits
+	}).format(value);
 }
 
 export function formatPercent(fraction: number, digits = 1): string {

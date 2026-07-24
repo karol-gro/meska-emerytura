@@ -1,28 +1,21 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
 	import { page } from '$app/state';
-	import AssumptionsPanel from '$lib/components/AssumptionsPanel.svelte';
-	import InputsForm from '$lib/components/InputsForm.svelte';
-	import ResultsPanel from '$lib/components/ResultsPanel.svelte';
+	import Pit0InputsForm from '$lib/components/Pit0InputsForm.svelte';
+	import Pit0ResultsPanel from '$lib/components/Pit0ResultsPanel.svelte';
+	import Pit0WarningsList from '$lib/components/Pit0WarningsList.svelte';
 	import ShareButton from '$lib/components/ShareButton.svelte';
 	import SiteFooter from '$lib/components/SiteFooter.svelte';
-	import WarningsList from '$lib/components/WarningsList.svelte';
 	import { Button } from '$lib/components/ui/button';
-	import { CalculatorState } from '$lib/state/calculator.svelte';
+	import { Pit0State } from '$lib/state/pit0.svelte';
 	import { formatPln } from '$lib/format';
 
-	const today = new Date();
-	const calc = new CalculatorState(
-		{ year: today.getFullYear(), month: today.getMonth() + 1 },
-		page.url
-	);
+	const calc = new Pit0State(page.url);
 
 	// wyniki od razu, gdy ktoś wszedł z udostępnionego linka; inaczej czekamy na „Policz"
 	let showResults = $state(calc.startedFromLink);
 	let resultsSection = $state<HTMLElement>();
 
-	// czekamy na flush DOM-u (tick) i domknięcie layoutu przeglądarki (rAF),
-	// inaczej scrollIntoView liczy pozycję zanim strona się w pełni ułoży
 	async function scrollToResults() {
 		await tick();
 		requestAnimationFrame(() => {
@@ -35,7 +28,6 @@
 		await scrollToResults();
 	}
 
-	// dane z udostępnionego linka znikają z paska adresu, a strona przewija się do wyników
 	onMount(() => {
 		if (calc.startedFromLink) {
 			calc.stripShareParam();
@@ -46,25 +38,24 @@
 
 <header class="grid gap-3">
 	<p class="text-lg text-muted-foreground">
-		Kobiety przechodzą na emeryturę w wieku 60 lat, mężczyźni – 65. Mężczyzna, jeśli chce przestać
-		pracować w wieku 60 lat, musi sam odłożyć środki.
+		Kobieta, która po 60. urodzinach dalej pracuje i nie pobiera emerytury, korzysta z ulgi PIT-0
+		dla seniora. Mężczyzna płaci PIT normalnie, bo prawo do ulgi nabywa dopiero w wieku 65 lat.
 	</p>
 	<p class="text-lg text-muted-foreground">
-		Policz, ile musisz odkładać, aby sfinansować emeryturę w wieku 60 lat.
+		Policz, o ile niższą wypłatę dostajesz i ile łącznie dopłacasz w latach 60–65.
 	</p>
 </header>
 
-<InputsForm state={calc} />
-<AssumptionsPanel state={calc} />
+<Pit0InputsForm state={calc} />
 
 {#if showResults}
 	<section bind:this={resultsSection} class="grid scroll-mt-6 gap-8">
-		<WarningsList warnings={calc.result.warnings} />
-		<ResultsPanel result={calc.result} />
+		<Pit0WarningsList warnings={calc.result.warnings} />
+		<Pit0ResultsPanel result={calc.result} />
 		<div class="flex justify-end">
 			<ShareButton
 				url={calc.shareUrl}
-				shareText={`Mój „podatek od płci" to ${formatPln(calc.result.monthlyContribution)} miesięcznie – tyle muszę odkładać, żeby przejść na emeryturę tak wcześnie jak kobiety. A Twój?`}
+				shareText={`Mój „podatek od płci" to ${formatPln(calc.result.monthlyDifference, 2)} miesięcznie – tyle mniej mam na rękę niż kobieta, bo ulgę PIT-0 dostanę dopiero 5 lat później. A Ty?`}
 			/>
 		</div>
 	</section>
@@ -81,13 +72,13 @@
 <SiteFooter>
 	{#snippet notes()}
 		<p>
-			To prognoza, nie obietnica. Nikt nie wie, jak rynki i inflacja zachowają się przez najbliższe
-			30 lat.
+			Założenia: standardowe koszty uzyskania przychodu, rozliczenie indywidualne, bez innych ulg i
+			odliczeń. Kwoty uśrednione w skali roku.
 		</p>
 		<p>
-			Wyliczona wpłata jest w dzisiejszych pieniądzach. Co roku podnoś ją o inflację. Przeczytaj
+			Kwoty według stanu prawnego na 2026 r. Przeczytaj
 			<a
-				href="https://github.com/karol-gro/meska-emerytura/blob/main/docs/IKE-ALGORYTM.md"
+				href="https://github.com/karol-gro/meska-emerytura/blob/main/docs/PIT-0-ALGORYTM.md"
 				target="_blank"
 				rel="noopener noreferrer"
 				class="underline underline-offset-2 hover:text-foreground">tutaj</a
