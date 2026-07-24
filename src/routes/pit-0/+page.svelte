@@ -42,7 +42,7 @@
 		dla seniora. Mężczyzna płaci PIT normalnie, bo prawo do ulgi nabywa dopiero w wieku 65 lat.
 	</p>
 	<p class="text-lg text-muted-foreground">
-		Policz, o ile niższą wypłatę dostajesz i ile łącznie dopłacasz w latach 60–65.
+		Policz, o ile niższą wypłatę dostaje mężczyzna i ile łącznie dopłaca w latach 60–65.
 	</p>
 </header>
 

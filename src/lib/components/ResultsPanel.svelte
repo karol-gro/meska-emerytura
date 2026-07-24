@@ -36,7 +36,7 @@
 			</div>
 		</Card.Header>
 		<Card.Content class="text-sm text-muted-foreground">
-			Tyle łącznie wydasz z własnej kieszeni
+			Tyle łącznie mężczyzna wyda z własnej kieszeni
 		</Card.Content>
 	</Card.Root>
 </div>

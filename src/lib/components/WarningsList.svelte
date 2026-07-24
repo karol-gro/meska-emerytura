@@ -9,12 +9,12 @@
 	const MESSAGES: Record<CalculatorWarning, { title: string; description: string }> = {
 		IKE_LIMIT_EXCEEDED: {
 			title: 'Przekroczony roczny limit wpłat na IKE',
-			description: `Wymagana wpłata przekracza limit ${formatPln(IKE_ANNUAL_LIMIT)} rocznie. Nadwyżkę musisz odłożyć poza IKE (np. na OKI, OIPE lub koncie maklerskim).`
+			description: `Wymagana wpłata przekracza limit ${formatPln(IKE_ANNUAL_LIMIT)} rocznie. Nadwyżkę należy odłożyć poza IKE (np. na OKI, OIPE lub koncie maklerskim).`
 		},
 		LESS_THAN_5_YEARS: {
 			title: `Mniej niż ${MIN_IKE_CONTRIBUTION_YEARS} lat wpłat do 60. urodzin`,
 			description:
-				'Zwolnienie podatkowe IKE wymaga wpłat w co najmniej 5 latach kalendarzowych. Część środków musisz odłożyć poza IKE.'
+				'Zwolnienie podatkowe IKE wymaga wpłat w co najmniej 5 latach kalendarzowych. Część środków musi być odłożona poza IKE.'
 		}
 	};
 </script>

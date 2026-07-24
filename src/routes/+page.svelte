@@ -50,7 +50,7 @@
 		pracować w wieku 60 lat, musi sam odłożyć środki.
 	</p>
 	<p class="text-lg text-muted-foreground">
-		Policz, ile musisz odkładać, aby sfinansować emeryturę w wieku 60 lat.
+		Policz, ile mężczyzna musi odkładać, aby sfinansować emeryturę w wieku 60 lat.
 	</p>
 </header>
 

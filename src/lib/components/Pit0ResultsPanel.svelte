@@ -40,7 +40,7 @@
 			</div>
 		</Card.Header>
 		<Card.Content class="text-sm text-muted-foreground">
-			O tyle masz niższą wypłatę niż kobieta
+			O tyle mężczyzna ma niższą wypłatę niż kobieta
 		</Card.Content>
 	</Card.Root>
 
@@ -53,7 +53,7 @@
 			</div>
 		</Card.Header>
 		<Card.Content class="text-sm text-muted-foreground">
-			Tyle więcej podatku oddasz fiskusowi przez 5 lat
+			Tyle więcej podatku mężczyzna odda fiskusowi przez 5 lat
 		</Card.Content>
 	</Card.Root>
 </div>
