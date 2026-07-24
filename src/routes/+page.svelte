@@ -67,6 +67,11 @@
 				shareText={`Mój „podatek od płci" to ${formatPln(calc.result.monthlyContribution)} miesięcznie – tyle muszę odkładać, żeby przejść na emeryturę tak wcześnie jak kobiety. A Twój?`}
 			/>
 		</div>
+		<p class="text-right text-sm text-muted-foreground">
+			<a href="/pit-0" class="underline underline-offset-2 hover:text-foreground">
+				Policz też, ile Cię kosztuje brak ulgi PIT-0 →
+			</a>
+		</p>
 	</section>
 {:else}
 	<Button

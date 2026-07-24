@@ -1,11 +1,19 @@
 import { describe, expect, it } from 'vitest';
 import type { ContractType } from '$lib/models/pit0';
 import {
+	B2B_ZDROW_BASE,
+	B2B_ZUS_BASE,
 	calculatePit0,
 	clampPit0,
 	DEFAULT_PIT0_INPUTS,
+	DEFAULT_RYCZALT_RATE,
 	GROSS_RANGE,
 	pitByScale,
+	RYCZALT_RANGE,
+	SKL_EMERYT_B2B,
+	SKL_RENT_B2B,
+	SKL_WYPADK_B2B,
+	SKL_ZDROWOTNA,
 	validatePit0
 } from './pit0';
 
@@ -39,8 +47,17 @@ const ZLEC: Row[] = [
 	{ gross: 15000, pitMan: 13292, pitWoman: 4448, netMan: 11005.34, netWoman: 11742.34, diff: 737.0, genderTax: 0.0628, total5: 44220 } // prettier-ignore
 ];
 
-function checkRow(contract: ContractType, row: Row) {
-	const r = calculatePit0({ grossSalary: row.gross, contract });
+// B2B na ryczałcie, stawka 12% (domyślna). Kobieta płaci ryczałt od nadwyżki ponad limit
+// od razu – ryczałt nie ma kwoty wolnej, więc PIT_K > 0 już przy niższych przychodach niż na skali.
+const B2B_RYCZALT_12: Row[] = [
+	{ gross: 5000, pitMan: 4465, pitWoman: 0, netMan: 2479.75, netWoman: 2851.83, diff: 372.08, genderTax: 0.1305, total5: 22325 }, // prettier-ignore
+	{ gross: 8000, pitMan: 8546, pitWoman: 932, netMan: 4807.44, netWoman: 5441.94, diff: 634.50, genderTax: 0.1166, total5: 38070 }, // prettier-ignore
+	{ gross: 15000, pitMan: 18626, pitWoman: 9776, netMan: 10967.44, netWoman: 11704.94, diff: 737.50, genderTax: 0.0630, total5: 44250 }, // prettier-ignore
+	{ gross: 30000, pitMan: 39748, pitWoman: 30305, netMan: 23542.81, netWoman: 24329.72, diff: 786.92, genderTax: 0.0323, total5: 47215 } // prettier-ignore
+];
+
+function checkRow(contract: ContractType, row: Row, ryczaltRate?: number) {
+	const r = calculatePit0({ grossSalary: row.gross, contract, ryczaltRate });
 	expect(r.pitMan).toBe(row.pitMan);
 	expect(r.pitWoman).toBe(row.pitWoman);
 	expect(r.netMan).toBeCloseTo(row.netMan, 2);
@@ -60,6 +77,43 @@ describe('calculatePit0 – tabela umowy zlecenia (docs/PIT-0-PRZYKLAD.md)', () 
 	for (const row of ZLEC) {
 		it(`brutto ${row.gross} zł`, () => checkRow('zlec', row));
 	}
+});
+
+describe('calculatePit0 – tabela B2B ryczałt 12% (docs/PIT-0-PRZYKLAD.md)', () => {
+	for (const row of B2B_RYCZALT_12) {
+		it(`przychód ${row.gross} zł`, () => checkRow('b2b-ryczalt', row, 0.12));
+	}
+});
+
+describe('calculatePit0 – B2B ryczałt: składki, stawka i ulga', () => {
+	const b2b = (grossSalary: number, ryczaltRate?: number) =>
+		calculatePit0({ grossSalary, contract: 'b2b-ryczalt', ryczaltRate });
+
+	it('składki społeczne to stały „duży ZUS", niezależny od przychodu', () => {
+		const expected = (SKL_EMERYT_B2B + SKL_RENT_B2B + SKL_WYPADK_B2B) * 12 * B2B_ZUS_BASE;
+		expect(b2b(8000).socialContributions).toBeCloseTo(expected, 2);
+		expect(b2b(30000).socialContributions).toBeCloseTo(expected, 2);
+	});
+
+	it('składka zdrowotna rośnie progami przychodu (60% / 100% / 180% podstawy)', () => {
+		expect(b2b(4000).healthContribution).toBeCloseTo(SKL_ZDROWOTNA * 12 * 0.6 * B2B_ZDROW_BASE, 2); // 48k ≤ 60k
+		expect(b2b(8000).healthContribution).toBeCloseTo(SKL_ZDROWOTNA * 12 * B2B_ZDROW_BASE, 2); // 96k
+		expect(b2b(30000).healthContribution).toBeCloseTo(SKL_ZDROWOTNA * 12 * 1.8 * B2B_ZDROW_BASE, 2); // 360k > 300k
+	});
+
+	it('wyższa stawka ryczałtu → większa różnica płci', () => {
+		expect(b2b(15000, 0.17).monthlyDifference).toBeGreaterThan(b2b(15000, 0.055).monthlyDifference);
+	});
+
+	it('brak stawki → stawka domyślna 12%', () => {
+		expect(b2b(8000).pitMan).toBe(b2b(8000, DEFAULT_RYCZALT_RATE).pitMan);
+	});
+
+	it('różnica wynika wyłącznie z ryczałtu, bez ostrzeżenia przy typowym przychodzie', () => {
+		const r = b2b(8000, 0.12);
+		expect(r.monthlyDifference).toBeCloseTo((r.pitMan - r.pitWoman) / 12, 6);
+		expect(r.warnings).toEqual([]);
+	});
 });
 
 describe('calculatePit0 – przykład szczegółowy §9 (UoP 8 000 zł)', () => {
@@ -137,11 +191,25 @@ describe('validatePit0 i clampPit0', () => {
 	it('akceptuje poprawne wejścia', () => {
 		expect(validatePit0({ grossSalary: 8000, contract: 'uop' })).toBe(true);
 		expect(validatePit0({ grossSalary: 8000, contract: 'zlec' })).toBe(true);
+		expect(validatePit0({ grossSalary: 8000, contract: 'b2b-ryczalt', ryczaltRate: 0.12 })).toBe(
+			true
+		);
 	});
 
-	it('odrzuca pensję poza zakresem i nieznaną formę umowy', () => {
+	it('odrzuca pensję poza zakresem, nieznaną formę umowy i stawkę spoza zakresu', () => {
 		expect(validatePit0({ grossSalary: 500, contract: 'uop' })).toBe(false);
 		expect(validatePit0({ grossSalary: 8000, contract: 'x' as ContractType })).toBe(false);
+		expect(validatePit0({ grossSalary: 8000, contract: 'b2b-ryczalt', ryczaltRate: 0.5 })).toBe(
+			false
+		);
+	});
+
+	it('przycina stawkę ryczałtu do zakresu, a jej brak sprowadza do domyślnej', () => {
+		expect(clampPit0({ grossSalary: 8000, contract: 'b2b-ryczalt', ryczaltRate: 0.5 }).ryczaltRate).toBe(RYCZALT_RANGE.max); // prettier-ignore
+		expect(clampPit0({ grossSalary: 8000, contract: 'b2b-ryczalt', ryczaltRate: 0.001 }).ryczaltRate).toBe(RYCZALT_RANGE.min); // prettier-ignore
+		expect(clampPit0({ grossSalary: 8000, contract: 'b2b-ryczalt' }).ryczaltRate).toBe(
+			DEFAULT_RYCZALT_RATE
+		);
 	});
 
 	it('przycina pensję do zakresu suwaka', () => {

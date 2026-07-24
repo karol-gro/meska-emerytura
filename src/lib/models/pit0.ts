@@ -1,15 +1,20 @@
-/** Forma umowy – wpływa na składki i koszty uzyskania przychodu */
-export type ContractType = 'uop' | 'zlec';
+/** Forma umowy – wpływa na składki, koszty i sposób opodatkowania */
+export type ContractType = 'uop' | 'zlec' | 'b2b-ryczalt';
 
 /**
  * Wejścia kalkulatora PIT-0 (docs/PIT-0-ALGORYTM.md §2).
  * Ta sama pensja brutto dla mężczyzny i kobiety – porównujemy identyczną pracę.
  */
 export interface Pit0Inputs {
-	/** B – pensja miesięczna brutto (zł) */
+	/** B – pensja/przychód miesięczny brutto (zł) */
 	grossSalary: number;
-	/** forma umowy: umowa o pracę / umowa zlecenie */
+	/** forma umowy: umowa o pracę / umowa zlecenie / działalność na ryczałcie */
 	contract: ContractType;
+	/**
+	 * Stawka ryczałtu (ułamek, 0.12 = 12%) – używana tylko dla `b2b-ryczalt`.
+	 * Pominięta dla pozostałych form; brak wartości = domyślna stawka (§4).
+	 */
+	ryczaltRate?: number;
 }
 
 export type Pit0Warning =

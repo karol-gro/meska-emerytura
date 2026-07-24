@@ -159,6 +159,38 @@ składki_społeczne    = 11,26% × 282 600 + 2,45% × 360 000 =  40 640,76 zł
 | -------------: | -----------: | -----------: | --------------: | --------------: | ------------: |
 |      30 000 zł | 18 081,83 zł | 20 105,08 zł |     2 023,25 zł |          10,06% |    121 395 zł |
 
+## B2B na ryczałcie (stawka 12%)
+
+Działalność gospodarcza jest objęta ulgą PIT-0 niezależnie od formy opodatkowania, więc na
+ryczałcie różnica płci istnieje. Inaczej niż na skali: **ryczałt nie ma kwoty wolnej**, dlatego
+kobieta płaci ryczałt od nadwyżki ponad limit **od pierwszej złotówki** (na UoP kwota wolna
+30 000 zł jeszcze przez chwilę ją chroni). Składki są identyczne dla obu płci: **duży ZUS** od
+stałej podstawy 5 652 zł oraz **progowa składka zdrowotna ryczałtowca**.
+
+Przykład dla **8 000 zł przychodu / mies.** (`B_rok = 96 000 zł`), stawka ryczałtu 12%:
+
+```
+składki_społeczne = (19,52% + 8% + 1,67%) × 12 × 5 652     = 19 797,83 zł   (stałe)
+podstawa_zdrow.   = 100% × 9 228,64   (przychód 60–300 tys.) =  9 228,64 zł
+składka_zdrowotna = 9% × 12 × 9 228,64                       =  9 966,93 zł
+odliczenia        = 19 797,83 + 50% × 9 966,93              = 24 781,29 zł
+
+ryczałt_M = 12% × (96 000 − 24 781,29)                      =  8 546 zł
+przych_opod (K) = 96 000 − 85 528 = 10 472;  u = 10 472/96 000 = 0,10908
+ryczałt_K = 12% × (10 472 − 24 781,29 × 0,10908)           =    932 zł
+```
+
+| Przychód / mies. |      Netto M |      Netto K | Różnica / mies. | Podatek od płci | Suma za 5 lat |
+| ---------------: | -----------: | -----------: | --------------: | --------------: | ------------: |
+|         5 000 zł |  2 479,75 zł |  2 851,83 zł |       372,08 zł |          13,05% |     22 325 zł |
+|         8 000 zł |  4 807,44 zł |  5 441,94 zł |       634,50 zł |          11,66% |     38 070 zł |
+|        15 000 zł | 10 967,44 zł | 11 704,94 zł |       737,50 zł |           6,30% |     44 250 zł |
+|        30 000 zł | 23 542,81 zł | 24 329,72 zł |       786,92 zł |           3,23% |     47 215 zł |
+
+Wyższy przychód → składka zdrowotna wskakuje na wyższy próg, a różnica płci dąży do maksimum
+`stawka × limit / 12` (przy 12% to ok. 855 zł/mies.), więc „podatek od płci" **procentowo maleje**,
+mimo że kwotowo rośnie.
+
 ---
 
 Wartości powyżej są policzone dokładnie tymi samymi wzorami co w `src/lib/services/pit0.ts`;

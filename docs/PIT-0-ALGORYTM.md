@@ -28,10 +28,11 @@ mężczyzna w wieku 60–65 lat** niż kobieta z identyczną pensją brutto, ora
 
 ## 2. Dane wejściowe (podaje użytkownik)
 
-| Symbol  | Nazwa                        | Zakres          | Uwagi                                                          |
-| ------- | ---------------------------- | --------------- | -------------------------------------------------------------- |
-| `B`     | Pensja miesięczna **brutto** | > 0             | ta sama dla mężczyzny i kobiety — porównujemy identyczną pracę |
-| `forma` | Forma umowy                  | `uop` \| `zlec` | umowa o pracę / umowa zlecenie                                 |
+| Symbol   | Nazwa                            | Zakres                           | Uwagi                                                          |
+| -------- | -------------------------------- | -------------------------------- | -------------------------------------------------------------- |
+| `B`      | Pensja/przychód mies. **brutto** | > 0                              | ta sama dla mężczyzny i kobiety — porównujemy identyczną pracę |
+| `forma`  | Forma umowy                      | `uop` \| `zlec` \| `b2b-ryczalt` | umowa o pracę / umowa zlecenie / działalność na ryczałcie      |
+| `stawka` | Stawka ryczałtu                  | 2%–17% (domyślnie 12%)           | tylko dla `b2b-ryczalt`; ignorowana dla pozostałych form       |
 
 ## 3. Założenia (najczęstszy przypadek podatnika — decyzja D3)
 
@@ -44,6 +45,11 @@ Obie osoby rozliczają się identycznie; różni je wyłącznie prawo do ulgi:
 - umowa zlecenie: **jedyny tytuł do ubezpieczeń** (składki emerytalna i rentowa obowiązkowe),
   **bez dobrowolnej składki chorobowej** — większość zleceniobiorców jej nie opłaca,
   koszty 20%, bez kosztów autorskich 50%,
+- **B2B na ryczałcie** (działalność objęta ulgą PIT-0): opodatkowanie **ryczałtem od przychodów
+  ewidencjonowanych** stawką z pola `stawka`, **duży ZUS** od stałej podstawy (60% prognozy),
+  **bez dobrowolnej chorobowej i bez Funduszu Pracy** (upraszczamy), składka zdrowotna wg progów
+  przychodu ryczałtowca. Umowa o dzieło **nie jest modelowana** — nie jest oskładkowana, więc nie
+  daje prawa do ulgi PIT-0 i nie generuje żadnej różnicy między płciami,
 - kobieta **nie pobiera emerytury** w latach 60–65 (warunek ulgi) — pracuje dokładnie tak
   samo jak mężczyzna,
 - przychody tylko z jednej umowy; **uwzględniamy limit 30-krotności podstawy składek** — powyżej
@@ -67,6 +73,21 @@ Obie osoby rozliczają się identycznie; różni je wyłącznie prawo do ulgi:
 | `KWOTA_ZMNIEJSZ`   | 3 600 zł   | 12% × 30 000 zł kwoty wolnej                                                    |
 | `LIMIT_30KROTNOSC` | 282 600 zł | roczny limit podstawy składek emerytalnej i rentowej – powyżej nie są pobierane |
 | `MIESIACE_LUKI`    | 60         | `(65 − 60) × 12`                                                                |
+
+Dodatkowo dla formy **B2B na ryczałcie** (wartości 2026):
+
+| Stała                   | Wartość     | Uwagi                                                                        |
+| ----------------------- | ----------- | ---------------------------------------------------------------------------- |
+| `PROGN_WYNAGRODZENIE`   | 9 420 zł    | prognozowane przeciętne wynagrodzenie miesięczne (= `LIMIT_30KROTNOSC / 30`) |
+| `B2B_ZUS_BASE`          | 5 652 zł    | podstawa dużego ZUS = 60% prognozy; stała, niezależna od przychodu           |
+| `SKL_EMERYT_B2B`        | 19,52%      | emerytalna przedsiębiorcy (pełna stawka)                                     |
+| `SKL_RENT_B2B`          | 8,00%       | rentowa przedsiębiorcy (pełna stawka)                                        |
+| `SKL_WYPADK_B2B`        | 1,67%       | wypadkowa (standardowa); chorobowa i Fundusz Pracy pominięte (§ 3)           |
+| `B2B_ZDROW_BASE`        | 9 228,64 zł | przeciętne wynagrodzenie w sektorze przedsiębiorstw (IV kw. 2025)            |
+| `B2B_ZDROW_PROG_NISKI`  | 60 000 zł   | do tego rocznego przychodu podstawa zdrowotnej = 60% `B2B_ZDROW_BASE`        |
+| `B2B_ZDROW_PROG_WYSOKI` | 300 000 zł  | do tego przychodu podstawa = 100%; powyżej = 180% `B2B_ZDROW_BASE`           |
+| `B2B_ZDROW_ODLICZENIE`  | 50%         | część zapłaconej zdrowotnej odliczana od przychodu w ryczałcie               |
+| `RYCZALT_RANGE`         | 2%–17%      | zakres suwaka stawki ryczałtu; domyślnie 12%                                 |
 
 ## 5. Kluczowe decyzje projektowe
 
@@ -109,6 +130,10 @@ dzielimy **proporcjonalnie** między część zwolnioną i opodatkowaną przycho
 tylko część przypadająca na przychód opodatkowany (krok 4).
 
 ## 6. Algorytm — krok po kroku
+
+Kroki 0 i 5–6 są wspólne dla wszystkich form. Kroki 1–4 zależą od formy: dla **UoP i zlecenia**
+opodatkowanie **skalą** (poniżej), dla **B2B na ryczałcie** — osobny wariant (§ 6a). W obu
+przypadkach składki są identyczne dla obu płci, więc różnicę robi wyłącznie podatek.
 
 ### Krok 0. Rocznienie
 
@@ -182,35 +207,79 @@ netto_K = (B_rok − skladki_spol − zdrowotna − PIT_K) / 12
 ### Krok 6. Miara nierówności — **wyniki główne nr 3 i 4**
 
 ```
-roznica_mies    = netto_K − netto_M                     # = (PIT_M − PIT_K) / 12
+roznica_mies    = netto_K − netto_M                     # = (podatek_M − podatek_K) / 12
 podatek_od_plci = roznica_mies / netto_K                # D4; procent
-suma_5_lat      = roznica_mies × MIESIACE_LUKI          # = (PIT_M − PIT_K) × 5
+suma_5_lat      = roznica_mies × MIESIACE_LUKI          # = (podatek_M − podatek_K) × 5
+```
+
+## 6a. Wariant B2B na ryczałcie (zamiast kroków 1–4)
+
+Dla formy `b2b-ryczalt` kroki 1–4 zastępujemy poniższym; kroki 0 oraz 5–6 są bez zmian (w krokach
+5–6 `PIT_M`/`PIT_K` to kwoty ryczałtu). Ryczałt liczony jest od **przychodu** (nie dochodu), po
+odliczeniu składek społecznych i połowy zdrowotnej, i **nie ma kwoty wolnej** — dlatego kobieta
+płaci ryczałt od nadwyżki ponad limit ulgi już od pierwszej złotówki nadwyżki.
+
+### B1. Składki (identyczne dla obu płci)
+
+Składki społeczne są stałe (duży ZUS od podstawy `B2B_ZUS_BASE`), niezależne od przychodu;
+zdrowotna zależy od progu rocznego przychodu:
+
+```
+skladki_spol = (SKL_EMERYT_B2B + SKL_RENT_B2B + SKL_WYPADK_B2B) × 12 × B2B_ZUS_BASE
+
+podst_zdrow  = 60% × B2B_ZDROW_BASE     dla  B_rok ≤ B2B_ZDROW_PROG_NISKI
+             = 100% × B2B_ZDROW_BASE    dla  B_rok ≤ B2B_ZDROW_PROG_WYSOKI
+             = 180% × B2B_ZDROW_BASE    dla  B_rok >  B2B_ZDROW_PROG_WYSOKI
+zdrowotna    = SKL_ZDROWOTNA × 12 × podst_zdrow
+
+odliczenia   = skladki_spol + B2B_ZDROW_ODLICZENIE × zdrowotna
+```
+
+### B2. Ryczałt mężczyzny (bez ulgi) i kobiety (z ulgą PIT-0)
+
+Ulga zwalnia przychód do `LIMIT_ULGI`; odliczenia przypisujemy części opodatkowanej proporcjonalnie
+(§ D5). `stawka` to wybrana stawka ryczałtu:
+
+```
+ryczalt_M = round(stawka × max(0, B_rok − odliczenia))
+
+przych_opod = max(0, B_rok − LIMIT_ULGI)
+u           = przych_opod / B_rok                       # udział części opodatkowanej
+ryczalt_K   = round(stawka × max(0, przych_opod − odliczenia × u))
 ```
 
 ## 7. Schemat przepływu
 
 ```mermaid
 flowchart TD
-    A[Wejście: brutto B, forma umowy] --> B[Przycięcie do zakresów<br/>B > 0]
-    B --> C[Krok 0-1: rocznienie, składki społeczne<br/>z limitem 30-krotności i zdrowotna<br/>- wspólne dla obu płci]
-    C --> D[Krok 3: mężczyzna<br/>KUP, dochód, PIT wg skali]
-    C --> E[Krok 4: kobieta<br/>przychód do 85 528 zł zwolniony,<br/>nadwyżka wg skali, składki proporcjonalnie]
+    A[Wejście: brutto B, forma, stawka] --> B[Przycięcie do zakresów<br/>B > 0, stawka 2-17%]
+    B --> Q{forma?}
+    Q -- UoP / zlecenie --> C[Składki społeczne z limitem<br/>30-krotności i zdrowotna]
+    C --> D[Mężczyzna: KUP, dochód, PIT wg skali]
+    C --> E[Kobieta: przychód do 85 528 zł zwolniony,<br/>nadwyżka wg skali, składki proporcjonalnie]
+    Q -- B2B ryczałt --> C2[Duży ZUS staly + zdrowotna progowa]
+    C2 --> D2[Mężczyzna: ryczałt od przychodu<br/>po odliczeniach]
+    C2 --> E2[Kobieta: ryczałt od nadwyżki ponad limit,<br/>odliczenia proporcjonalnie]
     D --> F[Krok 5: netto_M i netto_K miesięcznie]
     E --> F
+    D2 --> F
+    E2 --> F
     F --> H[Krok 6: różnica miesięczna,<br/>podatek od płci %, suma za 5 lat]
     H --> I[Prezentacja: netto M vs K,<br/>procent i łączna strata 60-65]
 ```
 
 ## 8. Walidacje i przypadki brzegowe
 
-| Warunek                           | Zachowanie                                                                                                                                       |
-| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `B_rok ≤ LIMIT_ULGI`              | cały przychód kobiety zwolniony: `PIT_K = 0` — wynika wprost z wzorów (krok 4), bez osobnej gałęzi                                               |
-| `PIT_M = 0` (bardzo niska pensja) | różnica = 0 — komunikat: przy tej pensji kwota wolna zeruje podatek obu płci, ulga nic nie zmienia                                               |
-| `B × 12 > LIMIT_30KROTNOSC`       | powyżej limitu składki emerytalna i rentowa nie są pobierane – uwzględniane wprost w kroku 1 (chorobowa i zdrowotna bez limitu), bez ostrzeżenia |
-| `dochod_K < 0` (teoretycznie)     | `PIT(d)` obcina do zera przez `max(t, 0)`; dodatkowo `KUP_K ≤ przych_opod` gwarantuje `dochod_K ≥ 0` przy UoP                                    |
-| zaokrąglenia                      | podstawa opodatkowania i roczny podatek do pełnych złotych (< 50 gr w dół, ≥ 50 gr w górę); netto prezentowane z groszami                        |
-| wejście poza zakresem             | wartość przycinana do najbliższej granicy zakresu (bez komunikatów błędów); zakres suwaka `B`: 1 000 – 60 000 zł                                 |
+| Warunek                           | Zachowanie                                                                                                                                        |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `B_rok ≤ LIMIT_ULGI`              | cały przychód kobiety zwolniony: `PIT_K = 0` — wynika wprost z wzorów (krok 4), bez osobnej gałęzi                                                |
+| `PIT_M = 0` (bardzo niska pensja) | różnica = 0 — komunikat: przy tej pensji kwota wolna zeruje podatek obu płci, ulga nic nie zmienia                                                |
+| `B × 12 > LIMIT_30KROTNOSC`       | powyżej limitu składki emerytalna i rentowa nie są pobierane – uwzględniane wprost w kroku 1 (chorobowa i zdrowotna bez limitu), bez ostrzeżenia  |
+| `dochod_K < 0` (teoretycznie)     | `PIT(d)` obcina do zera przez `max(t, 0)`; dodatkowo `KUP_K ≤ przych_opod` gwarantuje `dochod_K ≥ 0` przy UoP                                     |
+| zaokrąglenia                      | podstawa opodatkowania i roczny podatek/ryczałt do pełnych złotych (< 50 gr w dół, ≥ 50 gr w górę); netto prezentowane z groszami                 |
+| wejście poza zakresem             | wartość przycinana do najbliższej granicy zakresu (bez komunikatów błędów); zakres suwaka `B`: 1 000 – 60 000 zł, `stawka`: 2% – 17%              |
+| B2B, `B_rok ≤ LIMIT_ULGI`         | cały przychód kobiety zwolniony: `ryczalt_K = 0`; ryczałt nie ma kwoty wolnej, więc już powyżej limitu kobieta zaczyna płacić (inaczej niż skala) |
+| B2B, `ryczalt_M = 0`              | odliczenia ≥ przychód → różnica = 0, komunikat `NO_DIFFERENCE` (jak przy `PIT_M = 0`)                                                             |
 
 ## 9. Przykład liczbowy (umowa o pracę, brutto 8 000 zł/mies.)
 
