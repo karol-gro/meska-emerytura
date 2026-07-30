@@ -68,7 +68,7 @@
 	<Card.Content class="flex flex-wrap items-center justify-between gap-4">
 		<div class="flex items-center gap-3">
 			<IconGenderFemale class="size-7 shrink-0 text-destructive" stroke={2} aria-hidden="true" />
-			<p class="label-caps text-muted-foreground">Kobieta w tym przypadku potrzebuje odkładać</p>
+			<p class="label-caps text-muted-foreground">Kobieta w tym celu potrzebuje odkładać</p>
 		</div>
 		<p class="data-display text-4xl text-destructive">0 zł</p>
 	</Card.Content>
