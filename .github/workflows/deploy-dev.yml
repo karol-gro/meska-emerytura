@@ -1,0 +1,51 @@
+name: Deploy Worker (dev)
+
+on:
+  push:
+    branches:
+      - 'feature/**'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build, test and deploy dev Worker in Dev Container
+        uses: devcontainers/ci@v0.3
+        with:
+          imageName: ghcr.io/${{ github.repository }}/devcontainer
+          cacheFrom: ghcr.io/${{ github.repository }}/devcontainer
+          push: always
+          # `--name` nadpisuje nazwę Workera z wrangler.toml tylko na czas tego deployu –
+          # osobny Worker (i osobny *.workers.dev URL) niż produkcyjny „meska-emerytura",
+          # więc push na branch deweloperski nigdy nie nadpisuje produkcji.
+          runCmd: |
+            pnpm install --frozen-lockfile
+            pnpm test
+            pnpm check
+            pnpm lint
+            pnpm build
+            pnpm wrangler deploy --name meska-emerytura-dev
+          env: |
+            CLOUDFLARE_API_TOKEN
+            CLOUDFLARE_ACCOUNT_ID
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
