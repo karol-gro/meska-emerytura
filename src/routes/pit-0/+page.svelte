@@ -58,6 +58,11 @@
 				shareText={`Mój „podatek od płci" to ${formatPln(calc.result.monthlyDifference, 2)} miesięcznie – tyle mniej mam na rękę niż kobieta, bo ulgę PIT-0 dostanę dopiero 5 lat później. A Ty?`}
 			/>
 		</div>
+		<p class="text-right text-sm text-muted-foreground">
+			<a href="/czas-zycia" class="underline underline-offset-2 hover:text-foreground">
+				Policz też, ile tracisz przez krótszy czas życia →
+			</a>
+		</p>
 	</section>
 {:else}
 	<Button

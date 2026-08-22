@@ -46,7 +46,7 @@
 <div class="grid gap-4 sm:grid-cols-3">
 	<Card.Root class="border-t-2 border-t-primary">
 		<Card.Header class="flex items-start gap-3">
-			<IconGenderMale class="size-7 shrink-0 text-primary" stroke={2} aria-hidden="true" />
+			<IconUsers class="size-7 shrink-0 text-muted-foreground" stroke={2} aria-hidden="true" />
 			<div class="grid auto-rows-min gap-1">
 				<Card.Description class="label-caps">Emerytura dziś</Card.Description>
 				<Card.Title class="data-display text-4xl">
@@ -81,7 +81,7 @@
 			</div>
 		</Card.Header>
 		<Card.Content class="text-sm text-muted-foreground">
-			O tyle niższą emeryturę dostaje mężczyzna
+			O tyle krócej dożyje mężczyzna, niż zakłada tablica ZUS
 		</Card.Content>
 	</Card.Root>
 </div>

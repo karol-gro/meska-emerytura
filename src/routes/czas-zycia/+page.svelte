@@ -85,6 +85,18 @@
 			pochodzą wprost z oficjalnych tablic.
 		</p>
 		<p>
+			Stosowanie wspólnej tablicy dla obu płci nie jest błędem ZUS – w ubezpieczeniach społecznych
+			różnicowanie ze względu na płeć jest w Unii zakazane, a Trybunał Sprawiedliwości UE orzekł tak
+			wprost w tej samej kwestii (wyrok
+			<a
+				href="https://curia.europa.eu/juris/liste.jsf?num=C-318/13"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="underline underline-offset-2 hover:text-foreground">C-318/13, X</a
+			>). Ta strona nie postuluje zmiany tej zasady – pokazuje jedynie, jakie różnice wynikają z
+			niej przy różnym czasie życia obu płci.
+		</p>
+		<p>
 			Kwoty według stanu na 2026 r. Przeczytaj
 			<a
 				href="https://github.com/karol-gro/meska-emerytura/blob/main/docs/CZAS-ZYCIA-ALGORYTM.md"
