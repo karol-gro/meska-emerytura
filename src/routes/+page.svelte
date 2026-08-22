@@ -90,7 +90,8 @@
 			30 lat.
 		</p>
 		<p>
-			Wyliczona wpłata jest w dzisiejszych pieniądzach. Co roku podnoś ją o inflację. Przeczytaj
+			Wyliczona wpłata jest w dzisiejszych pieniądzach. Co roku podnoś ją o inflację. Roczny limit
+			wpłat na IKE (28 260 zł) według stanu na 2026 r. Przeczytaj
 			<a
 				href="https://github.com/karol-gro/meska-emerytura/blob/main/docs/IKE-ALGORYTM.md"
 				target="_blank"

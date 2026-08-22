@@ -5,7 +5,8 @@
 	// Zakładki nawigacji – wspólne dla wszystkich podstron
 	const tabs = [
 		{ href: '/', label: 'Wiek emerytalny' },
-		{ href: '/pit-0', label: 'PIT-0 dla seniora' }
+		{ href: '/pit-0', label: 'PIT-0' },
+		{ href: '/czas-zycia', label: 'Czas dożycia' }
 	];
 
 	// aktywna, gdy ścieżka się zgadza (z tolerancją na końcowy ukośnik z prerenderu)

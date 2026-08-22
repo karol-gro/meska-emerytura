@@ -58,6 +58,11 @@
 				shareText={`Mój „podatek od płci" to ${formatPln(calc.result.monthlyDifference, 2)} miesięcznie – tyle mniej mam na rękę niż kobieta, bo ulgę PIT-0 dostanę dopiero 5 lat później. A Ty?`}
 			/>
 		</div>
+		<p class="text-right text-sm text-muted-foreground">
+			<a href="/czas-zycia" class="underline underline-offset-2 hover:text-foreground">
+				Policz też, ile tracisz przez krótszy czas życia →
+			</a>
+		</p>
 	</section>
 {:else}
 	<Button
@@ -74,6 +79,10 @@
 		<p>
 			Założenia: standardowe koszty uzyskania przychodu, rozliczenie indywidualne, bez innych ulg i
 			odliczeń. Kwoty uśrednione w skali roku.
+		</p>
+		<p>
+			Model zakłada niezmienną pensję i stan prawny przez całe 5 lat, więc suma jest w dzisiejszych
+			złotówkach. Realna kwota będzie inna, jeśli zmienią się progi, limity albo Twoje zarobki.
 		</p>
 		<p>
 			Kwoty według stanu prawnego na 2026 r. Przeczytaj

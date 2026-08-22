@@ -39,7 +39,11 @@
 					class="underline underline-offset-2 hover:text-foreground">GNU AGPL v3</a
 				>.
 			</p>
-			<p>Nie przechowujemy po naszej stronie żadnych wprowadzonych tu danych.</p>
+			<p>Wyliczenia mają charakter poglądowy – to nie jest porada podatkowa ani inwestycyjna.</p>
+			<p>
+				Nie przechowujemy po naszej stronie żadnych wprowadzonych tu danych – ale udostępniany link
+				zawiera Twoje dane wejściowe, żeby odbiorca zobaczył ten sam wynik.
+			</p>
 			<p>
 				Kontakt: <a
 					href="mailto:kontakt@meskaemerytura.pl"
