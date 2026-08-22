@@ -73,7 +73,7 @@ przypadają na później, gdy świadczenie jest już wyżej zwaloryzowane.
 m_M = 222,7 − 198,00 = 24,70 miesięcznych emerytur
 m_K = 245,64 − 222,7 = 22,94 miesięcznych emerytur
 
-w_zwrot     = 65 + 222,7/12  = 83,6 lat     # dopiero wtedy emeryt odbiera cały swój kapitał (bez waloryzacji)
+w_dozycia_U = 65 + 222,7/12  = 83,6 lat     # tak długo dzieli kapitał ZUS (wspólna tablica)
 w_dozycia_M = 65 + 198,00/12 = 81,5 lat     # mężczyzna statystycznie nie dożywa tego punktu
 w_dozycia_K = 65 + 245,64/12 = 85,5 lat     # kobieta przekracza go o 3,9 roku
 ```
@@ -110,20 +110,20 @@ suma(e_K) = 4 500 zł × [(1,0012114082)^296,52 − 1] / 0,0012114082 = 1 604 30
 D_para = 1 604 304,04 − 1 255 400,40 = 348 903,63 zł     → 348 904 zł
 
 m_M = 28,42 miesięcznych emerytur       m_K = 27,62 miesięcznych emerytur
-w_zwrot     = 60 + 268,9/12  = 82,4 lat
+w_dozycia_U = 60 + 268,9/12  = 82,4 lat
 w_dozycia_M = 60 + 240,48/12 = 80,0 lat
 w_dozycia_K = 60 + 296,52/12 = 84,7 lat
 ```
 
 ## Pozostałe wieki (ten sam kapitał liczony osobno dla każdego wieku)
 
-| Wiek `w` | `K` (kapitał) | `E_M` (miesięcznie) | `D_para` (cały okres emerytury) | `w_zwrot` | `w_dożycia_M` | `w_dożycia_K` |
-| -------: | ------------: | ------------------: | ------------------------------: | --------: | ------------: | ------------: |
-|       60 |  1 210 050 zł |         5 031,81 zł |                      348 904 zł |      82,4 |          80,0 |          84,7 |
-|       65 |  1 002 150 zł |         5 061,36 zł |                      280 293 zł |      83,6 |          81,5 |          85,5 |
-|       70 |    812 700 zł |         5 069,24 zł |                      210 523 zł |      85,0 |          83,4 |          86,5 |
-|       75 |    637 650 zł |         5 055,90 zł |                      148 344 zł |      86,8 |          85,5 |          87,8 |
-|       80 |    478 800 zł |         5 031,53 zł |                       98 646 zł |      88,9 |          87,9 |          89,5 |
+| Wiek `w` | `K` (kapitał) | `E_M` (miesięcznie) | `D_para` (cały okres emerytury) | `w_dożycia_U` | `w_dożycia_M` | `w_dożycia_K` |
+| -------: | ------------: | ------------------: | ------------------------------: | ------------: | ------------: | ------------: |
+|       60 |  1 210 050 zł |         5 031,81 zł |                      348 904 zł |          82,4 |          80,0 |          84,7 |
+|       65 |  1 002 150 zł |         5 061,36 zł |                      280 293 zł |          83,6 |          81,5 |          85,5 |
+|       70 |    812 700 zł |         5 069,24 zł |                      210 523 zł |          85,0 |          83,4 |          86,5 |
+|       75 |    637 650 zł |         5 055,90 zł |                      148 344 zł |          86,8 |          85,5 |          87,8 |
+|       80 |    478 800 zł |         5 031,53 zł |                       98 646 zł |          88,9 |          87,9 |          89,5 |
 
 `E_M` rośnie z wiekiem do ok. 70 lat, a potem lekko maleje — to nie błąd, tylko realny kształt
 tablic GUS: stosunek `e_U / e_M` (o ile miesięcy więcej dostaje mężczyzna wg tablicy wspólnej

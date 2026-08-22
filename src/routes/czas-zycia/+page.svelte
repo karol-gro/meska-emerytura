@@ -76,6 +76,11 @@
 <SiteFooter>
 	{#snippet notes()}
 		<p>
+			Wszystkie kwoty są <strong>realne</strong>, czyli w dzisiejszych złotówkach. Suma za całą
+			emeryturę uwzględnia waloryzację świadczeń ponad inflację, ale nie pokazuje, jak przez te
+			20–25 lat urosną same liczby na przelewie.
+		</p>
+		<p>
 			Suma za cały okres emerytury to szacunek zależny od przyjętej waloryzacji; miesięczne kwoty
 			pochodzą wprost z oficjalnych tablic.
 		</p>

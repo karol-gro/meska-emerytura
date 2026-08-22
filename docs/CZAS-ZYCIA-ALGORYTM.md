@@ -291,15 +291,15 @@ D_para = suma(e_K) − suma(e_M)      # o ile więcej łącznie dostanie kobieta
 u_M_mies    = d_M / E_M = 1 − e_M / e_U        # „podatek od płci" mężczyzny, punktowo (miesięcznie)
 m_M         = e_U − e_M                         # ile miesięcznych emerytur „traci" mężczyzna względem wspólnej tablicy
 m_K         = e_K − e_U                         # ile dodatkowych miesięcznych emerytur pobiera kobieta
-w_zwrot     = w + e_U / 12                      # wiek, w którym emeryt odbiera cały swój kapitał
+w_dozycia_U = w + e_U / 12                      # statystyczny wiek dożycia wg wspólnej tablicy ZUS
 w_dozycia_M = w + e_M / 12                      # statystyczny wiek dożycia mężczyzny
 w_dozycia_K = w + e_K / 12                      # statystyczny wiek dożycia kobiety
 ```
 
-Para `w_zwrot` vs `w_dozycia_M` / `w_dozycia_K` daje najbardziej namacalny wynik: do jakiego
-wieku trzeba dożyć, żeby wyjść na zero (bez waloryzacji), i kto statystycznie tego wieku
-dożywa. `m_M`, `m_K`, `w_zwrot`, `w_dozycia_M/K` nie zależą od `wal_e`/`i` — liczą się na
-samych miesiącach z tablic.
+Trójka `w_dozycia_M` / `w_dozycia_U` / `w_dozycia_K` daje najbardziej namacalny wynik i jest
+punktem wyjścia prezentacji: ZUS dzieli kapitał tak, jakby każdy dożył `w_dozycia_U`, a
+statystycznie mężczyzna kończy wcześniej, kobieta później. `m_M`, `m_K` i wszystkie trzy wieki
+dożycia nie zależą od `wal_e`/`i` — liczą się na samych miesiącach z tablic.
 
 ## 8. Schemat przepływu
 

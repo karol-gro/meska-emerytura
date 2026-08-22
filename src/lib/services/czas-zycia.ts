@@ -111,7 +111,7 @@ export function calculate(inputs: CzasZyciaInputs): CzasZyciaResult {
 	// Krok 6
 	const monthsLeftInSystem = eUnisex - eMale;
 	const extraMonthsWoman = eFemale - eUnisex;
-	const breakEvenAge = inputs.age + eUnisex / 12;
+	const lifeExpectancyAgeUnisex = inputs.age + eUnisex / 12;
 	const lifeExpectancyAgeMale = inputs.age + eMale / 12;
 	const lifeExpectancyAgeFemale = inputs.age + eFemale / 12;
 
@@ -129,7 +129,7 @@ export function calculate(inputs: CzasZyciaInputs): CzasZyciaResult {
 		lifetimeGap,
 		monthsLeftInSystem,
 		extraMonthsWoman,
-		breakEvenAge,
+		lifeExpectancyAgeUnisex,
 		lifeExpectancyAgeMale,
 		lifeExpectancyAgeFemale,
 		warnings

@@ -121,7 +121,7 @@ describe('calculate – przykład domyślny (docs/CZAS-ZYCIA-PRZYKLAD.md: E=4500
 	it('krok 6: m_M/m_K i wieki dożycia/zwrotu', () => {
 		expect(result.monthsLeftInSystem).toBeCloseTo(24.7, 6);
 		expect(result.extraMonthsWoman).toBeCloseTo(22.94, 6);
-		expect(result.breakEvenAge).toBeCloseTo(83.558333, 5);
+		expect(result.lifeExpectancyAgeUnisex).toBeCloseTo(83.558333, 5);
 		expect(result.lifeExpectancyAgeMale).toBeCloseTo(81.5, 5);
 		expect(result.lifeExpectancyAgeFemale).toBeCloseTo(85.47, 5);
 	});

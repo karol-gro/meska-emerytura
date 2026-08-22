@@ -40,8 +40,8 @@ export interface CzasZyciaResult {
 	monthsLeftInSystem: number;
 	/** m_K – ile dodatkowych miesięcznych emerytur pobiera kobieta */
 	extraMonthsWoman: number;
-	/** w_zwrot – wiek, w którym emeryt odbiera cały swój kapitał (bez waloryzacji) */
-	breakEvenAge: number;
+	/** w_dozycia_U – statystyczny wiek dożycia wg wspólnej (unisex) tablicy ZUS */
+	lifeExpectancyAgeUnisex: number;
 	/** w_dozycia_M – statystyczny wiek dożycia mężczyzny */
 	lifeExpectancyAgeMale: number;
 	/** w_dozycia_K – statystyczny wiek dożycia kobiety */
