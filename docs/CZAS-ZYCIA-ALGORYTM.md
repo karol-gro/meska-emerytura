@@ -46,7 +46,7 @@ Kalkulator **wycenia** tę zasadę, a nie postuluje jej zmianę: pokazuje, ile k
 | Symbol | Nazwa                             | Zakres            | Uwagi                                                                                          |
 | ------ | --------------------------------- | ----------------- | ---------------------------------------------------------------------------------------------- |
 | `E`    | Prognozowana emerytura miesięczna | 1 000 – 20 000 zł | brutto, tak jak podaje ją kalkulator ZUS / „Twoja przyszła emerytura" w eZUS; patrz decyzja D1 |
-| `w`    | Wiek przejścia na emeryturę       | 60 – 75 lat       | pełne lata; domyślnie 65 (ustawowy wiek mężczyzny), 60 to wiek ustawowy kobiety                |
+| `w`    | Wiek przejścia na emeryturę       | 60 – 80 lat       | pełne lata; domyślnie 65 (ustawowy wiek mężczyzny), 60 to wiek ustawowy kobiety                |
 
 Poza tymi dwoma wejściami kalkulator ma jedno dodatkowe założenie edytowalne — realną
 waloryzację emerytur (§ 3) — potrzebne wyłącznie do przeliczenia **łącznej różnicy** za cały
@@ -89,31 +89,54 @@ Zasady doboru danych:
 - **Aktualizacja:** `e_U` co roku 1 kwietnia, `e_M`/`e_K` po lipcowej publikacji GUS. Rocznik
   tablic trzymamy w stałej `TABLICE_ROCZNIK` i pokazujemy w UI (jak datę kursu walut).
 
-Wartości potwierdzone (stan na sierpień 2026):
+Pełna tablica (wiek 60–80, stan na sierpień 2026) — dokładnie te same wartości są przepisane
+do `src/lib/services/life-tables.ts`:
 
-| Wiek `w` | `e_U` (unisex) |      `e_M` (mężczyźni) |        `e_K` (kobiety) |
-| -------: | -------------: | ---------------------: | ---------------------: |
-|       60 |    268,9 mies. | 240,0 mies. (20,0 lat) | 296,4 mies. (24,7 lat) |
-|       65 |    222,7 mies. |        do uzupełnienia |        do uzupełnienia |
+| Wiek `w` | `e_U` (unisex) | `e_M` (mężczyźni) | `e_K` (kobiety) |
+| -------: | -------------: | ----------------: | --------------: |
+|       60 |    268,9 mies. |      240,48 mies. |    296,52 mies. |
+|       61 |    259,4 mies. |      231,60 mies. |    286,08 mies. |
+|       62 |    250,0 mies. |      222,84 mies. |    275,76 mies. |
+|       63 |    240,7 mies. |      214,32 mies. |    265,56 mies. |
+|       64 |    231,7 mies. |      206,04 mies. |    255,60 mies. |
+|       65 |    222,7 mies. |      198,00 mies. |    245,64 mies. |
+|       66 |    214,1 mies. |      190,08 mies. |    235,92 mies. |
+|       67 |    205,4 mies. |      182,40 mies. |    226,20 mies. |
+|       68 |    197,0 mies. |      174,96 mies. |    216,72 mies. |
+|       69 |    188,8 mies. |      167,64 mies. |    207,24 mies. |
+|       70 |    180,6 mies. |      160,32 mies. |    198,00 mies. |
+|       71 |    172,6 mies. |      153,24 mies. |    188,88 mies. |
+|       72 |    164,6 mies. |      146,28 mies. |    180,00 mies. |
+|       73 |    156,8 mies. |      139,44 mies. |    171,12 mies. |
+|       74 |    149,2 mies. |      132,72 mies. |    162,48 mies. |
+|       75 |    141,7 mies. |      126,12 mies. |    153,96 mies. |
+|       76 |    134,3 mies. |      119,64 mies. |    145,68 mies. |
+|       77 |    127,1 mies. |      113,28 mies. |    137,64 mies. |
+|       78 |    120,0 mies. |      107,04 mies. |    129,72 mies. |
+|       79 |    113,2 mies. |      101,04 mies. |    122,04 mies. |
+|       80 |    106,4 mies. |       95,16 mies. |    114,48 mies. |
+
+`e_U` przepisane wprost z załącznika do komunikatu (kolumna „0 miesięcy ukończonych powyżej
+pełnego roku życia"); `e_M`/`e_K` przepisane z kolumny `ex` (arkusze „Ogółem mężczyźni" /
+„Ogółem kobiety") Tablicy A i pomnożone przez 12. Niezmiennik `e_M < e_U < e_K` spełniony dla
+wszystkich 21 wierszy (test danych, § 11).
 
 Pliki źródłowe: komunikat w [M.P. 2026 poz. 319](https://monitorpolski.gov.pl/MP/2026/319)
 (także [ISAP](https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WMP20260000319)),
 [lista komunikatów GUS](https://stat.gov.pl/sygnalne/komunikaty-i-obwieszczenia/lista-komunikatow-i-obwieszczen/komunikat-w-sprawie-tablicy-sredniego-dalszego-trwania-zycia-kobiet-i-mezczyzn,285,11.html)
 wraz z [wyjaśnieniami metodologicznymi](https://stat.gov.pl/files/gfx/portalinformacyjny/pl/defaultaktualnosci/5463/285/13/1/tab_sr_dal_trw_zycia_wyjasnienia.pdf),
 a tablice dla płci — w publikacji GUS „Trwanie życia w 2025 r." (obszar tematyczny
-Ludność → Trwanie życia).
+Ludność → Trwanie życia), plik „Tablica A" (arkusze „Ogółem mężczyźni"/„Ogółem kobiety").
 
-Pozostałe wiersze (61–64, 66–75) trafiają do `src/lib/services/life-tables.ts` przepisane
-z tych plików — patrz § 11. Dla porządku: poprzednia tablica unisex (do 31.03.2026)
-dawała 266,4 mies. w wieku 60 lat i 220,8 mies. w wieku 65 lat, więc świadczenia liczone
-po 1 kwietnia 2026 są o ~1% niższe.
+Dla porządku: poprzednia tablica unisex (do 31.03.2026) dawała 266,4 mies. w wieku 60 lat
+i 220,8 mies. w wieku 65 lat, więc świadczenia liczone po 1 kwietnia 2026 są o ~1% niższe.
 
 ## 5. Stałe systemowe (konfiguracja aplikacji, nie do edycji przez użytkownika)
 
 | Stała               | Wartość               | Uwagi                                                                                   |
 | ------------------- | --------------------- | --------------------------------------------------------------------------------------- |
 | `WIEK_EMERYTALNY_M` | 65                    | ustawowy wiek emerytalny mężczyzn                                                       |
-| `WIEK_RANGE`        | 60 – 75 lat           | zakres suwaka wieku; dolna granica = najwcześniejszy wiek emerytalny w systemie         |
+| `WIEK_RANGE`        | 60 – 80 lat           | zakres suwaka wieku; dolna granica = najwcześniejszy wiek emerytalny w systemie         |
 | `EMERYTURA_RANGE`   | 1 000 – 20 000 zł     | zakres suwaka prognozy; domyślnie 4 500 zł (≈ przeciętna emerytura po waloryzacji 2026) |
 | `TABLICE_ROCZNIK`   | 2026/2027 (dane 2025) | rocznik wczytanych tablic; do pokazania w UI i do testu spójności                       |
 
@@ -282,7 +305,7 @@ samych miesiącach z tablic.
 
 ```mermaid
 flowchart TD
-    A[Wejście: prognoza E, wiek w] --> B[Przycięcie do zakresów<br/>E 1 000-20 000 zł, w 60-75 lat]
+    A[Wejście: prognoza E, wiek w] --> B[Przycięcie do zakresów<br/>E 1 000-20 000 zł, w 60-80 lat]
     B --> C[Krok 0: odczyt tablic dla wieku w<br/>e_U unisex, e_M mężczyźni, e_K kobiety]
     C --> C1[Krok 1: realna waloryzacja emerytur<br/>wal_e_real, q_e miesięcznie]
     C --> D[Krok 2: kapitał K = E × e_U<br/>odwrócenie wzoru ZUS]
@@ -301,7 +324,7 @@ flowchart TD
 
 | Warunek                            | Zachowanie                                                                                                                                                                                                      |
 | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| wejście poza zakresem              | wartość przycinana do najbliższej granicy (bez komunikatów błędów): `E` do 1 000 – 20 000 zł, `w` do 60 – 75 lat                                                                                                |
+| wejście poza zakresem              | wartość przycinana do najbliższej granicy (bez komunikatów błędów): `E` do 1 000 – 20 000 zł, `w` do 60 – 80 lat                                                                                                |
 | `w < WIEK_EMERYTALNY_M`            | ostrzeżenie `MALE_AGE_HYPOTHETICAL` — mężczyzna nie przejdzie w tym wieku na emeryturę powszechną; wynik pokazuje sam efekt tablicy, nie realny scenariusz                                                      |
 | `wal_e < i`                        | **waloryzacja nie może być niższa od inflacji** (gwarancja ustawowa emerytur) — nominalną waloryzację podnosimy do `i`, więc `wal_e_real ≥ 0` i `q_e ≥ 0` (jak `wal_s`/`wal_e` w IKE-ALGORYTM)                  |
 | `q_e = 0`                          | wzór graniczny z kroku 5 (`suma(e) = E × e`, bez dzielenia przez zero) — model wraca do dawnej, płaskiej różnicy `E × (e_K − e_M)`                                                                              |
@@ -311,35 +334,40 @@ flowchart TD
 | zaokrąglenia                       | tablice trzymamy w oryginalnej precyzji (unisex 0,1 miesiąca, GUS 0,01 roku); świadczenie `E_M` prezentujemy z groszami, `D_para` — do pełnych złotych; `wal_e_real`/`q_e` liczymy bez pośredniego zaokrąglania |
 | nieaktualne tablice                | rocznik `TABLICE_ROCZNIK` pokazujemy przy wynikach; podmiana tablic to zmiana danych, nie algorytmu                                                                                                             |
 
-## 10. Przykład liczbowy (prognoza 4 500 zł, wiek 60 lat, założenia domyślne)
-
-Wiek 60 to jedyny wiersz, dla którego mamy dziś komplet potwierdzonych wartości (§ 4) —
-i zarazem wiek, w którym na emeryturę przechodzą kobiety. Dla mężczyzny jest to wiek
-hipotetyczny (ostrzeżenie `MALE_AGE_HYPOTHETICAL`), pokazujący sam efekt tablicy.
+## 10. Przykład liczbowy (prognoza 4 500 zł, wiek 65 lat – założenia domyślne)
 
 Wynik w jednym zdaniu: mężczyzna dostaje z ZUS **4 500 zł** miesięcznie, a gdyby ZUS
-uwzględnił jego czas życia i policzył emeryturę tablicą męską, wyszłoby **5 041,88 zł**.
+uwzględnił jego czas życia i policzył emeryturę tablicą męską, wyszłoby **5 061,36 zł**.
 W ciągu całego okresu emerytury, w dzisiejszych złotówkach i z uwzględnieniem realnej
-waloryzacji emerytur (ok. 1,46% rocznie), mężczyzna dostanie łącznie o **351 018 zł** mniej
-niż jego rówieśniczka na tych samych warunkach. Pełne przeliczenie krok po kroku w
+waloryzacji emerytur (ok. 1,46% rocznie), mężczyzna dostanie łącznie o **280 293 zł** mniej
+niż jego rówieśniczka na tych samych warunkach. Przy 65 latach nie pojawia się ostrzeżenie
+`MALE_AGE_HYPOTHETICAL` — to realny, ustawowy wiek emerytalny mężczyzny.
+
+Wynik zależy od wybranego wieku — im później ktoś przechodzi na emeryturę, tym mniejsza
+łączna różnica (`D_para`), bo maleje zarówno liczba miesięcy pobierania świadczenia, jak
+i rozjazd `e_K − e_M` między tablicami:
+
+| Wiek `w` | `E_M` (miesięcznie) | `D_para` (cały okres emerytury) |
+| -------: | ------------------: | ------------------------------: |
+|       60 |         5 031,81 zł |                      348 904 zł |
+|       65 |         5 061,36 zł |                      280 293 zł |
+|       70 |         5 069,24 zł |                      210 523 zł |
+|       75 |         5 055,90 zł |                      148 344 zł |
+|       80 |         5 031,53 zł |                       98 646 zł |
+
+Pełne przeliczenie krok po kroku (wraz z wariantem dla wieku 60 lat — jedynego, dla którego
+`w` jest jednocześnie realnym, ustawowym wiekiem emerytalnym kobiety) w
 [CZAS-ZYCIA-PRZYKLAD.md](CZAS-ZYCIA-PRZYKLAD.md).
 
 ## 11. Do uzupełnienia przy implementacji
 
-1. **Przepisać tablice** dla wieku 60–75 do `src/lib/services/life-tables.ts`:
-   `e_U` z komunikatu Prezesa GUS (M.P. 2026 poz. 319, wiersze „`w` lat i 0 miesięcy"),
-   `e_M` i `e_K` z tablic trwania życia GUS za 2025 r. Do każdej tablicy dopisać w komentarzu
-   źródło i rocznik.
-2. **Test danych**: kompletność zakresu, niezmiennik `e_M < e_U < e_K` dla każdego wieku,
-   zgodność `e_U` z wartościami z § 4 (60 lat: 268,9; 65 lat: 222,7), oraz test na `suma(e)`
-   z kroku 5 (round-trip przeciwko wartościom z § 10).
-3. **Przeliczyć [CZAS-ZYCIA-PRZYKLAD.md](CZAS-ZYCIA-PRZYKLAD.md)** na dokładnych wartościach
-   z pliku danych i uzupełnić o wariant dla wieku 65 lat, gdy tablice `e_M`/`e_K` dla tego
-   wieku będą uzupełnione (§ 4) — do tego czasu kalkulator obsługuje wyłącznie wiek 60
-   (stała `AGE` w `services/czas-zycia.ts`).
-4. **Zweryfikować rocznik** tablicy unisex w „Wyjaśnieniach do tablicy średniego dalszego
-   trwania życia" GUS — musi być ten sam rok umieralności co tablice dla płci (§ 4).
-5. **Współdzielić wzór na realną stopę (Fishera)** między `calculator.ts` (IKE) a tym
+1. **Współdzielić wzór na realną stopę (Fishera)** między `calculator.ts` (IKE) a tym
    kalkulatorem — `wal_e_real = (1 + wal_e) / (1 + i) − 1` to dokładnie ten sam wzór co dla
    `wal_s_real`/`wal_e_real` w IKE-ALGORYTM (§ 6, krok 0 tam / krok 1 tu); rozważyć wspólny
    helper zamiast duplikować.
+2. **Zweryfikować rocznik** tablicy unisex wprost w „Wyjaśnieniach do tablicy średniego
+   dalszego trwania życia" GUS — musi być ten sam rok umieralności co tablice dla płci (§ 4).
+   Obecne dane są sparowane na podstawie znanej metodologii GUS (komunikat unisex publikowany
+   w marcu roku N liczony jest z danych za rok N−1, tak samo jak „Trwanie życia w [N−1] r.")
+   i potwierdzone zgodnością z wcześniej znanymi wartościami (268,9 / 222,7 / 220,8), ale bez
+   wprost zacytowanego zdania ze źródła.
