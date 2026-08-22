@@ -87,7 +87,8 @@ Zasady doboru danych:
   populacji, więc leży między nimi, ale bliżej wartości kobiet (kobiet w tym wieku żyje
   więcej). Bierzemy wartości opublikowane, niczego nie uśredniamy.
 - **Aktualizacja:** `e_U` co roku 1 kwietnia, `e_M`/`e_K` po lipcowej publikacji GUS. Rocznik
-  tablic trzymamy w stałej `TABLICE_ROCZNIK` i pokazujemy w UI (jak datę kursu walut).
+  tablic podajemy wprost w stopce kalkulatora (tekstem, bez osobnej stałej) — przy podmianie
+  danych trzeba zaktualizować także ten opis.
 
 Pełna tablica (wiek 60–80, stan na sierpień 2026) — dokładnie te same wartości są przepisane
 do `src/lib/services/life-tables.ts`:
@@ -133,12 +134,11 @@ i 220,8 mies. w wieku 65 lat, więc świadczenia liczone po 1 kwietnia 2026 są 
 
 ## 5. Stałe systemowe (konfiguracja aplikacji, nie do edycji przez użytkownika)
 
-| Stała               | Wartość               | Uwagi                                                                                   |
-| ------------------- | --------------------- | --------------------------------------------------------------------------------------- |
-| `WIEK_EMERYTALNY_M` | 65                    | ustawowy wiek emerytalny mężczyzn                                                       |
-| `WIEK_RANGE`        | 60 – 80 lat           | zakres suwaka wieku; dolna granica = najwcześniejszy wiek emerytalny w systemie         |
-| `EMERYTURA_RANGE`   | 1 000 – 20 000 zł     | zakres suwaka prognozy; domyślnie 4 500 zł (≈ przeciętna emerytura po waloryzacji 2026) |
-| `TABLICE_ROCZNIK`   | 2026/2027 (dane 2025) | rocznik wczytanych tablic; do pokazania w UI i do testu spójności                       |
+| Stała               | Wartość           | Uwagi                                                                                   |
+| ------------------- | ----------------- | --------------------------------------------------------------------------------------- |
+| `WIEK_EMERYTALNY_M` | 65                | ustawowy wiek emerytalny mężczyzn                                                       |
+| `WIEK_RANGE`        | 60 – 80 lat       | zakres suwaka wieku; dolna granica = najwcześniejszy wiek emerytalny w systemie         |
+| `EMERYTURA_RANGE`   | 1 000 – 20 000 zł | zakres suwaka prognozy; domyślnie 4 500 zł (≈ przeciętna emerytura po waloryzacji 2026) |
 
 ## 6. Kluczowe decyzje projektowe
 
@@ -332,7 +332,7 @@ flowchart TD
 | `e_M ≥ e_U` lub `e_K ≤ e_U`        | dane z różnych roczników albo błąd transkrypcji; wzory dalej liczą (wynik zmienia znak), a wyłapuje to test niezmiennika z kroku 0 — bez osobnej gałęzi w kalkulatorze                                          |
 | `E` bardzo wysokie / bardzo niskie | brak przypadku szczególnego: wszystkie wyniki są liniowe w `E`, więc procent (`u_M_mies`) i liczby miesięcy (`m_M`, `m_K`) w ogóle od `E` nie zależą                                                            |
 | zaokrąglenia                       | tablice trzymamy w oryginalnej precyzji (unisex 0,1 miesiąca, GUS 0,01 roku); świadczenie `E_M` prezentujemy z groszami, `D_para` — do pełnych złotych; `wal_e_real`/`q_e` liczymy bez pośredniego zaokrąglania |
-| nieaktualne tablice                | rocznik `TABLICE_ROCZNIK` pokazujemy przy wynikach; podmiana tablic to zmiana danych, nie algorytmu                                                                                                             |
+| nieaktualne tablice                | rocznik tablic podajemy w stopce kalkulatora; podmiana tablic to zmiana danych, nie algorytmu                                                                                                                   |
 
 ## 10. Przykład liczbowy (prognoza 4 500 zł, wiek 65 lat – założenia domyślne)
 

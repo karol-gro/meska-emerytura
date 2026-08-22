@@ -81,6 +81,10 @@
 			odliczeń. Kwoty uśrednione w skali roku.
 		</p>
 		<p>
+			Model zakłada niezmienną pensję i stan prawny przez całe 5 lat, więc suma jest w dzisiejszych
+			złotówkach. Realna kwota będzie inna, jeśli zmienią się progi, limity albo Twoje zarobki.
+		</p>
+		<p>
 			Kwoty według stanu prawnego na 2026 r. Przeczytaj
 			<a
 				href="https://github.com/karol-gro/meska-emerytura/blob/main/docs/PIT-0-ALGORYTM.md"

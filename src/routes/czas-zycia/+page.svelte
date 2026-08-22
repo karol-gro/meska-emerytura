@@ -62,6 +62,11 @@
 				shareText={`Przez krótszy czas życia dostanę łącznie o ${formatPln(calc.result.lifetimeGap)} mniej emerytury niż rówieśniczka na tych samych warunkach. A Ty?`}
 			/>
 		</div>
+		<p class="text-right text-sm text-muted-foreground">
+			<a href="/" class="underline underline-offset-2 hover:text-foreground">
+				Policz też, ile musisz odłożyć, by przejść na emeryturę w wieku 60 lat →
+			</a>
+		</p>
 	</section>
 {:else}
 	<Button
@@ -83,6 +88,17 @@
 		<p>
 			Suma za cały okres emerytury to szacunek zależny od przyjętej waloryzacji; miesięczne kwoty
 			pochodzą wprost z oficjalnych tablic.
+		</p>
+		<p>
+			Tablica wspólna (unisex) – ta, której ZUS używa do wyliczenia emerytury – pochodzi z
+			<a
+				href="https://monitorpolski.gov.pl/MP/2026/319"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="underline underline-offset-2 hover:text-foreground"
+				>komunikatu Prezesa GUS z 25 marca 2026 r.</a
+			> i obowiązuje od 1 kwietnia 2026 r. do 31 marca 2027 r. Osobne tablice dla mężczyzn i kobiet –
+			z publikacji GUS „Trwanie życia w 2025 r." (Tablica A). Oba źródła opisują umieralność za 2025 r.
 		</p>
 		<p>
 			Porównanie różnicy w długości życia między krajami – dane
@@ -107,7 +123,7 @@
 			niej przy różnym czasie życia obu płci.
 		</p>
 		<p>
-			Kwoty według stanu na 2026 r. Przeczytaj
+			Przeczytaj
 			<a
 				href="https://github.com/karol-gro/meska-emerytura/blob/main/docs/CZAS-ZYCIA-ALGORYTM.md"
 				target="_blank"
