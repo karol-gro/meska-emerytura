@@ -39,9 +39,9 @@
 
 <header class="grid gap-3">
 	<p class="text-lg text-muted-foreground">
-		Mężczyźni statystycznie żyją krócej niż kobiety i ta różnica w Polsce jest jedną z najwyższych w
-		krajach rozwiniętych. Przy tej samej emeryturze miesięcznej mężczyzna pobiera ją krócej, więc w
-		sumie dostanie mniej.
+		Mężczyźni statystycznie żyją krócej niż kobiety. W Polsce ta różnica to 7,4 roku, w Holandii –
+		2,8. Średnia UE to 5,2. Przy tej samej emeryturze miesięcznej mężczyzna pobiera ją krócej, więc
+		w sumie dostanie mniej.
 	</p>
 	<p class="text-lg text-muted-foreground">
 		Policz, ile mężczyzna dostałby, gdyby ZUS uwzględnił jego czas życia, i o ile mniej łącznie
@@ -83,6 +83,16 @@
 		<p>
 			Suma za cały okres emerytury to szacunek zależny od przyjętej waloryzacji; miesięczne kwoty
 			pochodzą wprost z oficjalnych tablic.
+		</p>
+		<p>
+			Porównanie różnicy w długości życia między krajami – dane
+			<a
+				href="https://ec.europa.eu/eurostat/databrowser/view/demo_mlexpec/default/table"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="underline underline-offset-2 hover:text-foreground">Eurostatu za 2024 r.</a
+			> (oczekiwana długość życia w chwili urodzenia). Same wyliczenia emerytury opierają się na tablicach
+			GUS, gdzie ta różnica wynosi 7,1 roku.
 		</p>
 		<p>
 			Stosowanie wspólnej tablicy dla obu płci nie jest błędem ZUS – w ubezpieczeniach społecznych
