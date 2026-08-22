@@ -39,9 +39,9 @@
 
 <header class="grid gap-3">
 	<p class="text-lg text-muted-foreground">
-		ZUS liczy emeryturę jedną, wspólną tablicą dalszego trwania życia dla obu płci – choć mężczyźni
-		statystycznie żyją krócej niż kobiety. Przy tej samej emeryturze miesięcznej kobieta pobiera ją
-		dłużej, więc w sumie dostanie więcej.
+		Mężczyźni statystycznie żyją krócej niż kobiety i ta różnica w Polsce jest jedną z najwyższych w
+		krajach rozwiniętych. Przy tej samej emeryturze miesięcznej mężczyzna pobiera ją krócej, więc w
+		sumie dostanie mniej.
 	</p>
 	<p class="text-lg text-muted-foreground">
 		Policz, ile mężczyzna dostałby, gdyby ZUS uwzględnił jego czas życia, i o ile mniej łącznie
@@ -59,7 +59,7 @@
 		<div class="flex justify-end">
 			<ShareButton
 				url={calc.shareUrl}
-				shareText={`Przez wspólną tablicę ZUS dostanę łącznie o ${formatPln(calc.result.lifetimeGap)} mniej niż rówieśniczka na tych samych warunkach. A Ty?`}
+				shareText={`Przez krótszy czas życia dostanę łącznie o ${formatPln(calc.result.lifetimeGap)} mniej emerytury niż rówieśniczka na tych samych warunkach. A Ty?`}
 			/>
 		</div>
 	</section>
@@ -76,9 +76,8 @@
 <SiteFooter>
 	{#snippet notes()}
 		<p>
-			Liczymy dla wieku 60 lat – jedynego rocznika z kompletem potwierdzonych danych GUS. Suma za
-			cały okres emerytury to szacunek zależny od przyjętej waloryzacji; miesięczne kwoty pochodzą
-			wprost z oficjalnych tablic.
+			Suma za cały okres emerytury to szacunek zależny od przyjętej waloryzacji; miesięczne kwoty
+			pochodzą wprost z oficjalnych tablic.
 		</p>
 		<p>
 			Kwoty według stanu na 2026 r. Przeczytaj

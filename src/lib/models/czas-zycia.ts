@@ -1,11 +1,11 @@
 /**
  * Wejścia kalkulatora czasu życia (docs/CZAS-ZYCIA-ALGORYTM.md §2, §3).
- * Wiek `w` jest na sztywno 60 lat (jedyny rocznik z kompletem potwierdzonych danych GUS,
- * §4) – patrz stała `AGE` w `services/czas-zycia.ts`.
  */
 export interface CzasZyciaInputs {
 	/** E – prognozowana emerytura miesięczna (zł, brutto) */
 	monthlyPension: number;
+	/** w – wiek przejścia na emeryturę (pełne lata) */
+	age: number;
 	/** wal_e – nominalna roczna waloryzacja emerytur */
 	pensionValorization: number;
 	/** i – inflacja roczna */

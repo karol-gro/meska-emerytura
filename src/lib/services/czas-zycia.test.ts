@@ -1,13 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import type { CzasZyciaInputs } from '$lib/models/czas-zycia';
 import {
-	AGE,
+	AGE_RANGE,
 	calculate,
 	clamp,
 	DEFAULT_INPUTS,
 	growingAnnuitySum,
 	monthlyRealRate,
 	realAnnualRate,
+	RETIREMENT_AGE_MALE,
 	validate
 } from './czas-zycia';
 
@@ -30,14 +31,14 @@ describe('growingAnnuitySum (§7 krok 5, suma(e) – renta rosnąca)', () => {
 		expect(growingAnnuitySum(4500, 240, 0)).toBe(4500 * 240);
 	});
 
-	it('przykład domyślny: suma(e_M) = 240 mies. przy q_e ≈ 0,1211%/mies.', () => {
+	it('przykład domyślny: suma(e_M) = 198 mies. przy q_e ≈ 0,1211%/mies.', () => {
 		const q = monthlyRealRate(0.04, 0.025);
-		expect(growingAnnuitySum(4500, 240, q)).toBeCloseTo(1252513.01, 1);
+		expect(growingAnnuitySum(4500, 198, q)).toBeCloseTo(1_006_253.18, 1);
 	});
 
-	it('przykład domyślny: suma(e_K) = 296,4 mies. przy q_e ≈ 0,1211%/mies.', () => {
+	it('przykład domyślny: suma(e_K) = 245,64 mies. przy q_e ≈ 0,1211%/mies.', () => {
 		const q = monthlyRealRate(0.04, 0.025);
-		expect(growingAnnuitySum(4500, 296.4, q)).toBeCloseTo(1603531.34, 1);
+		expect(growingAnnuitySum(4500, 245.64, q)).toBeCloseTo(1_286_546.12, 1);
 	});
 });
 
@@ -54,6 +55,12 @@ describe('validate', () => {
 	it('odrzuca nie-liczby', () => {
 		expect(validate({ ...DEFAULT_INPUTS, monthlyPension: NaN })).toBe(false);
 	});
+
+	it('odrzuca wiek poza zakresem 60–80 i wiek niecałkowity', () => {
+		expect(validate({ ...DEFAULT_INPUTS, age: 59 })).toBe(false);
+		expect(validate({ ...DEFAULT_INPUTS, age: 81 })).toBe(false);
+		expect(validate({ ...DEFAULT_INPUTS, age: 65.5 })).toBe(false);
+	});
 });
 
 describe('clamp', () => {
@@ -62,10 +69,17 @@ describe('clamp', () => {
 		expect(clamp({ ...DEFAULT_INPUTS, monthlyPension: 25_000 }).monthlyPension).toBe(20_000);
 	});
 
+	it('przycina wiek do zakresu 60–80 i zaokrągla do pełnych lat', () => {
+		expect(clamp({ ...DEFAULT_INPUTS, age: 55 }).age).toBe(AGE_RANGE.min);
+		expect(clamp({ ...DEFAULT_INPUTS, age: 90 }).age).toBe(AGE_RANGE.max);
+		expect(clamp({ ...DEFAULT_INPUTS, age: 67.6 }).age).toBe(68);
+	});
+
 	it('nie-liczbę zamienia na wartość domyślną', () => {
 		expect(clamp({ ...DEFAULT_INPUTS, monthlyPension: NaN }).monthlyPension).toBe(
 			DEFAULT_INPUTS.monthlyPension
 		);
+		expect(clamp({ ...DEFAULT_INPUTS, age: NaN }).age).toBe(DEFAULT_INPUTS.age);
 	});
 
 	it('gwarancja ustawowa: waloryzacja nie może być niższa od inflacji (§9)', () => {
@@ -74,51 +88,71 @@ describe('clamp', () => {
 	});
 });
 
-describe('calculate – przykład domyślny (docs/CZAS-ZYCIA-PRZYKLAD.md: E=4500 zł, wiek 60)', () => {
+describe('calculate – przykład domyślny (docs/CZAS-ZYCIA-PRZYKLAD.md: E=4500 zł, wiek 65)', () => {
 	const result = calculate(DEFAULT_INPUTS);
 
-	it('krok 0: tablice dla wieku 60', () => {
-		expect(result.eUnisex).toBe(268.9);
-		expect(result.eMale).toBe(240.0);
-		expect(result.eFemale).toBe(296.4);
+	it('domyślny wiek to ustawowy wiek emerytalny mężczyzny', () => {
+		expect(DEFAULT_INPUTS.age).toBe(RETIREMENT_AGE_MALE);
 	});
 
-	it('krok 2: kapitał K = 1 210 050 zł', () => {
-		expect(result.capital).toBeCloseTo(1_210_050, 2);
+	it('krok 0: tablice dla wieku 65', () => {
+		expect(result.eUnisex).toBe(222.7);
+		expect(result.eMale).toBe(198);
+		expect(result.eFemale).toBe(245.64);
 	});
 
-	it('krok 3: E_M = 5 041,88 zł – wynik główny nr 2', () => {
-		expect(result.pensionIfMaleTable).toBeCloseTo(5_041.875, 3);
+	it('krok 2: kapitał K = 1 002 150 zł', () => {
+		expect(result.capital).toBeCloseTo(1_002_150, 2);
 	});
 
-	it('krok 4: d_M = 541,88 zł/mies., u_M_mies ≈ 10,75%', () => {
-		expect(result.monthlyGap).toBeCloseTo(541.88, 2);
-		expect(result.monthlyGapShare).toBeCloseTo(0.1075, 3);
+	it('krok 3: E_M ≈ 5 061,36 zł – wynik główny nr 2', () => {
+		expect(result.pensionIfMaleTable).toBeCloseTo(5_061.363636, 5);
 	});
 
-	it('krok 5: D_para ≈ 351 018 zł – wynik główny nr 1', () => {
-		expect(result.lifetimeGap).toBeCloseTo(351_018, 0);
+	it('krok 4: d_M ≈ 561,36 zł/mies., u_M_mies ≈ 11,09%', () => {
+		expect(result.monthlyGap).toBeCloseTo(561.363636, 5);
+		expect(result.monthlyGapShare).toBeCloseTo(0.11091154, 6);
+	});
+
+	it('krok 5: D_para ≈ 280 293 zł – wynik główny nr 1', () => {
+		expect(result.lifetimeGap).toBeCloseTo(280_293, 0);
 	});
 
 	it('krok 6: m_M/m_K i wieki dożycia/zwrotu', () => {
-		expect(result.monthsLeftInSystem).toBeCloseTo(28.9, 6);
-		expect(result.extraMonthsWoman).toBeCloseTo(27.5, 6);
-		expect(result.breakEvenAge).toBeCloseTo(82.408333, 5);
-		expect(result.lifeExpectancyAgeMale).toBeCloseTo(80.0, 5);
-		expect(result.lifeExpectancyAgeFemale).toBeCloseTo(84.7, 5);
+		expect(result.monthsLeftInSystem).toBeCloseTo(24.7, 6);
+		expect(result.extraMonthsWoman).toBeCloseTo(22.94, 6);
+		expect(result.breakEvenAge).toBeCloseTo(83.558333, 5);
+		expect(result.lifeExpectancyAgeMale).toBeCloseTo(81.5, 5);
+		expect(result.lifeExpectancyAgeFemale).toBeCloseTo(85.47, 5);
 	});
 
-	it('ostrzeżenie MALE_AGE_HYPOTHETICAL – AGE (60) < WIEK_EMERYTALNY_M (65)', () => {
-		expect(AGE).toBeLessThan(65);
+	it('brak ostrzeżenia MALE_AGE_HYPOTHETICAL – wiek domyślny to realny wiek emerytalny', () => {
+		expect(result.warnings).toEqual([]);
+	});
+});
+
+describe('calculate – ostrzeżenie MALE_AGE_HYPOTHETICAL (§7, krok 6)', () => {
+	it('pojawia się dla wieku poniżej 65 lat', () => {
+		const result = calculate({ ...DEFAULT_INPUTS, age: 60 });
 		expect(result.warnings).toEqual(['MALE_AGE_HYPOTHETICAL']);
+	});
+
+	it('nie pojawia się dla wieku 65 lat i starszego', () => {
+		expect(calculate({ ...DEFAULT_INPUTS, age: 65 }).warnings).toEqual([]);
+		expect(calculate({ ...DEFAULT_INPUTS, age: 80 }).warnings).toEqual([]);
 	});
 });
 
 describe('calculate – q_e = 0 wraca do płaskiej różnicy (§9)', () => {
 	it('D_para = E × (e_K − e_M) bez waloryzacji', () => {
-		const inputs: CzasZyciaInputs = { monthlyPension: 4_500, pensionValorization: 0, inflation: 0 };
+		const inputs: CzasZyciaInputs = {
+			monthlyPension: 4_500,
+			age: 60,
+			pensionValorization: 0,
+			inflation: 0
+		};
 		const result = calculate(inputs);
-		expect(result.lifetimeGap).toBeCloseTo(4_500 * (296.4 - 240.0), 6);
+		expect(result.lifetimeGap).toBeCloseTo(4_500 * (296.52 - 240.48), 6);
 	});
 });
 
@@ -134,5 +168,13 @@ describe('calculate – liniowość w E (§6 D1)', () => {
 		const base = calculate({ ...DEFAULT_INPUTS, monthlyPension: 4_500 });
 		const doubled = calculate({ ...DEFAULT_INPUTS, monthlyPension: 9_000 });
 		expect(doubled.lifetimeGap).toBeCloseTo(base.lifetimeGap * 2, 6);
+	});
+});
+
+describe('calculate – wiek 60 (docs/CZAS-ZYCIA-PRZYKLAD.md, wariant historyczny)', () => {
+	it('E_M ≈ 5 031,81 zł, D_para ≈ 348 904 zł', () => {
+		const result = calculate({ ...DEFAULT_INPUTS, age: 60 });
+		expect(result.pensionIfMaleTable).toBeCloseTo(5_031.81, 1);
+		expect(result.lifetimeGap).toBeCloseTo(348_904, 0);
 	});
 });

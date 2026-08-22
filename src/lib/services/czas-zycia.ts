@@ -5,11 +5,10 @@ import type { Range } from './constants';
 /** Stałe systemowe (docs/CZAS-ZYCIA-ALGORYTM.md §5) */
 export const RETIREMENT_AGE_MALE = 65;
 
-/**
- * Wiek przejścia na emeryturę – na sztywno 60 lat: jedyny rocznik z kompletem potwierdzonych
- * danych GUS (§4 algorytmu). Pełny zakres 60–75 (§2) czeka na przepisanie tablic (§11 pkt 1).
- */
-export const AGE = 60;
+/** Zakres suwaka wieku (§2) – zgodny z zakresem przepisanych tablic w life-tables.ts */
+export const AGE_RANGE: Range = { min: 60, max: 80 };
+/** Domyślny wiek – ustawowy wiek emerytalny mężczyzny */
+export const DEFAULT_AGE = RETIREMENT_AGE_MALE;
 
 export const PENSION_RANGE: Range = { min: 1_000, max: 20_000 };
 export const VALORIZATION_RANGE: Range = { min: 0, max: 0.15 };
@@ -17,6 +16,7 @@ export const INFLATION_RANGE: Range = { min: 0, max: 0.1 };
 
 export const DEFAULT_INPUTS: CzasZyciaInputs = {
 	monthlyPension: 4_500,
+	age: DEFAULT_AGE,
 	pensionValorization: 0.04,
 	inflation: 0.025
 };
@@ -48,6 +48,9 @@ export function validate(inputs: CzasZyciaInputs): boolean {
 		Number.isFinite(inputs.monthlyPension) &&
 		inputs.monthlyPension >= PENSION_RANGE.min &&
 		inputs.monthlyPension <= PENSION_RANGE.max &&
+		Number.isInteger(inputs.age) &&
+		inputs.age >= AGE_RANGE.min &&
+		inputs.age <= AGE_RANGE.max &&
 		Number.isFinite(inputs.pensionValorization) &&
 		inputs.pensionValorization >= VALORIZATION_RANGE.min &&
 		inputs.pensionValorization <= VALORIZATION_RANGE.max &&
@@ -59,12 +62,16 @@ export function validate(inputs: CzasZyciaInputs): boolean {
 
 /**
  * Przycina wejścia do zakresów (§9, tabela walidacji). Nie-liczby wracają do wartości
- * domyślnych; waloryzacja nie może być niższa od inflacji (gwarancja ustawowa emerytur).
+ * domyślnych; wiek jest zaokrąglany do pełnych lat; waloryzacja nie może być niższa od
+ * inflacji (gwarancja ustawowa emerytur).
  */
 export function clamp(inputs: CzasZyciaInputs): CzasZyciaInputs {
 	const monthlyPension = Number.isFinite(inputs.monthlyPension)
 		? Math.min(PENSION_RANGE.max, Math.max(PENSION_RANGE.min, inputs.monthlyPension))
 		: DEFAULT_INPUTS.monthlyPension;
+	const age = Number.isFinite(inputs.age)
+		? Math.min(AGE_RANGE.max, Math.max(AGE_RANGE.min, Math.round(inputs.age)))
+		: DEFAULT_INPUTS.age;
 	const inflation = Number.isFinite(inputs.inflation)
 		? Math.min(INFLATION_RANGE.max, Math.max(INFLATION_RANGE.min, inputs.inflation))
 		: DEFAULT_INPUTS.inflation;
@@ -73,7 +80,7 @@ export function clamp(inputs: CzasZyciaInputs): CzasZyciaInputs {
 		: DEFAULT_INPUTS.pensionValorization;
 	// gwarancja ustawowa (§9): nominalna waloryzacja nie może być niższa od inflacji
 	const pensionValorization = Math.max(pensionValorizationRaw, inflation);
-	return { monthlyPension, pensionValorization, inflation };
+	return { monthlyPension, age, pensionValorization, inflation };
 }
 
 /**
@@ -81,7 +88,7 @@ export function clamp(inputs: CzasZyciaInputs): CzasZyciaInputs {
  */
 export function calculate(inputs: CzasZyciaInputs): CzasZyciaResult {
 	// Krok 0
-	const { unisex: eUnisex, male: eMale, female: eFemale } = lifeTableRow(AGE);
+	const { unisex: eUnisex, male: eMale, female: eFemale } = lifeTableRow(inputs.age);
 
 	// Krok 1
 	const q = monthlyRealRate(inputs.pensionValorization, inputs.inflation);
@@ -104,12 +111,12 @@ export function calculate(inputs: CzasZyciaInputs): CzasZyciaResult {
 	// Krok 6
 	const monthsLeftInSystem = eUnisex - eMale;
 	const extraMonthsWoman = eFemale - eUnisex;
-	const breakEvenAge = AGE + eUnisex / 12;
-	const lifeExpectancyAgeMale = AGE + eMale / 12;
-	const lifeExpectancyAgeFemale = AGE + eFemale / 12;
+	const breakEvenAge = inputs.age + eUnisex / 12;
+	const lifeExpectancyAgeMale = inputs.age + eMale / 12;
+	const lifeExpectancyAgeFemale = inputs.age + eFemale / 12;
 
 	const warnings: CzasZyciaWarning[] = [];
-	if (AGE < RETIREMENT_AGE_MALE) warnings.push('MALE_AGE_HYPOTHETICAL');
+	if (inputs.age < RETIREMENT_AGE_MALE) warnings.push('MALE_AGE_HYPOTHETICAL');
 
 	return {
 		eUnisex,

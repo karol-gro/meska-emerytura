@@ -45,7 +45,7 @@
 			<Card.Content class="grid gap-6">
 				<AssumptionSlider
 					label="Waloryzacja emerytur"
-					description="Nominalna, rocznie. Nie mniej niż inflacja. Wpływa tylko na sumę za cały okres emerytury."
+					description="Nominalna, rocznie. Nie mniej niż inflacja."
 					value={calc.inputs.pensionValorization}
 					min={Math.max(VALORIZATION_RANGE.min, calc.sanitized.inflation)}
 					max={VALORIZATION_RANGE.max}

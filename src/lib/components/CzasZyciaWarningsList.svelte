@@ -6,9 +6,9 @@
 
 	const MESSAGES: Record<CzasZyciaWarning, { title: string; description: string }> = {
 		MALE_AGE_HYPOTHETICAL: {
-			title: 'Wiek 60 lat jest dla mężczyzny hipotetyczny',
+			title: 'Ten wiek jest dla mężczyzny hipotetyczny',
 			description:
-				'Mężczyzna przechodzi na emeryturę powszechną w wieku 65 lat. Wynik pokazuje sam efekt wspólnej tablicy dalszego trwania życia – nie realny scenariusz, w którym akurat teraz mężczyzna miałby 60 lat i przechodził na emeryturę.'
+				'Mężczyzna przechodzi na emeryturę powszechną dopiero w wieku 65 lat. Wynik pokazuje sam efekt wspólnej tablicy dalszego trwania życia – nie realny scenariusz, w którym mężczyzna akurat w tym wieku przechodziłby na emeryturę.'
 		}
 	};
 </script>
