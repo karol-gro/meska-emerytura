@@ -43,7 +43,20 @@
 </Card.Root>
 
 <!-- 2. Emerytura miesięczna: dziś vs po uwzględnieniu czasu życia, i różnica procentowa -->
-<div class="grid gap-4 sm:grid-cols-3">
+<div class="grid gap-4 sm:grid-cols-2">
+	<!-- <Card.Root class="border-t-2 border-t-destructive sm:col-span-2">
+		<Card.Header class="flex items-start gap-3">
+			<div class="grid auto-rows-min gap-1">
+				<Card.Description class="label-caps">Różnica</Card.Description>
+				<Card.Title class="data-display text-4xl text-destructive">
+					{formatPercent(result.monthlyGapShare)}
+				</Card.Title>
+			</div>
+		</Card.Header>
+		<Card.Content class="text-sm text-muted-foreground">
+			O tyle krócej dożyje mężczyzna, niż zakłada tablica ZUS
+		</Card.Content>
+	</Card.Root> -->
 	<Card.Root class="border-t-2 border-t-primary">
 		<Card.Header class="flex items-start gap-3">
 			<IconUsers class="size-7 shrink-0 text-muted-foreground" stroke={2} aria-hidden="true" />
@@ -61,7 +74,7 @@
 		<Card.Header class="flex items-start gap-3">
 			<IconGenderMale class="size-7 shrink-0 text-primary" stroke={2} aria-hidden="true" />
 			<div class="grid auto-rows-min gap-1">
-				<Card.Description class="label-caps">Gdyby uwzględniono czas życia</Card.Description>
+				<Card.Description class="label-caps">Uwzględniając czas życia</Card.Description>
 				<Card.Title class="data-display text-4xl">
 					{formatPln(result.pensionIfMaleTable, 2)}
 				</Card.Title>
@@ -69,20 +82,6 @@
 		</Card.Header>
 		<Card.Content class="text-sm text-muted-foreground">Miesięcznie, z tablicy męskiej</Card.Content
 		>
-	</Card.Root>
-
-	<Card.Root class="border-t-2 border-t-destructive">
-		<Card.Header class="flex items-start gap-3">
-			<div class="grid auto-rows-min gap-1">
-				<Card.Description class="label-caps">Różnica</Card.Description>
-				<Card.Title class="data-display text-4xl text-destructive">
-					{formatPercent(result.monthlyGapShare)}
-				</Card.Title>
-			</div>
-		</Card.Header>
-		<Card.Content class="text-sm text-muted-foreground">
-			O tyle krócej dożyje mężczyzna, niż zakłada tablica ZUS
-		</Card.Content>
 	</Card.Root>
 </div>
 
@@ -95,6 +94,6 @@
 				Łącznie przez całą emeryturę kobieta dostanie więcej o
 			</p>
 		</div>
-		<p class="data-display text-4xl text-destructive">{formatPln(result.lifetimeGap)}</p>
+		<p class="data-display ml-10 text-4xl text-destructive">{formatPln(result.lifetimeGap)}</p>
 	</Card.Content>
 </Card.Root>
