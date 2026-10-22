@@ -14,8 +14,8 @@ const ROOT = resolve(fileURLToPath(import.meta.url), '../..');
 const SOURCE = resolve(ROOT, 'src/lib/assets/unequal.svg');
 const OUT = resolve(ROOT, 'static');
 
-/** Tło ikon „aplikacyjnych” (iOS zamienia przezroczystość na czerń). */
-const BACKGROUND = '#ffffff';
+/** Tło ikon „aplikacyjnych” = tło strony (iOS zamienia przezroczystość na czerń). */
+const BACKGROUND = '#0b1326';
 
 /** Margines ikon aplikacyjnych jako ułamek boku – mieści się w strefie bezpiecznej maskable. */
 const APP_ICON_PADDING = 0.2;
