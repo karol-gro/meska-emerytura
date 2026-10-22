@@ -18,7 +18,8 @@
 		"test": "pnpm test:unit -- --run",
 		"lint": "prettier --check . && pnpm lint:dashes",
 		"lint:dashes": "node scripts/check-dashes.js",
-		"format": "prettier --write . && node scripts/check-dashes.js --fix"
+		"format": "prettier --write . && node scripts/check-dashes.js --fix",
+		"icons": "node scripts/generate-icons.js"
 	},
 	"devDependencies": {
 		"@fontsource-variable/inter": "^5.2.8",
@@ -35,6 +36,7 @@
 		"prettier-plugin-svelte": "^4.1.0",
 		"prettier-plugin-tailwindcss": "^0.8.0",
 		"shadcn-svelte": "^1.4.2",
+		"sharp": "^0.34.5",
 		"svelte": "^5.56.1",
 		"svelte-check": "^4.6.0",
 		"tailwind-merge": "^3.6.0",

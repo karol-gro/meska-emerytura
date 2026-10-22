@@ -19,3 +19,17 @@
 # żeby podmiana pliku (bez zmiany nazwy) doszła do crawlerów w rozsądnym czasie.
 /og-image.png
   Cache-Control: public, max-age=86400
+
+# Favikony i manifest – stałe nazwy (crawlery szukają ich pod znanymi adresami), więc cache na dobę.
+/favicon.ico
+  Cache-Control: public, max-age=86400
+/favicon.svg
+  Cache-Control: public, max-age=86400
+/favicon-96x96.png
+  Cache-Control: public, max-age=86400
+/apple-touch-icon.png
+  Cache-Control: public, max-age=86400
+/web-app-manifest-*
+  Cache-Control: public, max-age=86400
+/site.webmanifest
+  Cache-Control: public, max-age=86400
