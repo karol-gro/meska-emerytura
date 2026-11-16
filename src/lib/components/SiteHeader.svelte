@@ -35,9 +35,9 @@
 		{/each}
 	</nav>
 
-	<a href="/" class="flex items-center gap-3 rounded-none focus-visible:outline-none">
+	<span class="flex items-center gap-3 rounded-none focus-visible:outline-none">
 		<img src={unequalIcon} alt="" class="size-9 sm:size-11" />
 		<span class="text-4xl font-extrabold tracking-tight uppercase sm:text-5xl">Męska emerytura</span
 		>
-	</a>
+	</span>
 </header>
